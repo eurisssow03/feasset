@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: homestay-postgres-prod
+    environment:
+      POSTGRES_DB: homestay
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - homestay-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: homestay-redis-prod
+    volumes:
+      - redis_data_prod:/data
+    restart: unless-stopped
+    networks:
+      - homestay-network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: homestay-server-prod
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/homestay?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./server/uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - homestay-network
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: homestay-client-prod
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - homestay-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: homestay-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - client
+      - server
+    restart: unless-stopped
+    networks:
+      - homestay-network
+
+volumes:
+  postgres_data_prod:
+  redis_data_prod:
+
+networks:
+  homestay-network:
+    driver: bridge

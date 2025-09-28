@@ -1,0 +1,217 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  FINANCE
+  CLEANER
+  AGENT
+}
+
+enum ReservationStatus {
+  DRAFT
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELED
+}
+
+enum DepositStatus {
+  NOT_REQUIRED
+  PENDING
+  HELD
+  PAID
+  PARTIALLY_REFUNDED
+  REFUNDED
+  FORFEITED
+  FAILED
+}
+
+enum CleaningStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  DONE
+  FAILED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  role         Role
+  passwordHash String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  assignedCleanings CleaningTask[]
+  auditLogs         AuditLog[]
+  depositEvents     DepositEvent[]
+
+  @@map("users")
+}
+
+model Unit {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  address     String?
+  calendarId  String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  reservations  Reservation[]
+  cleaningTasks CleaningTask[]
+
+  @@map("units")
+}
+
+model Guest {
+  id       String   @id @default(cuid())
+  fullName String
+  phone    String?
+  email    String?
+  notes    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  reservations Reservation[]
+
+  @@map("guests")
+}
+
+model Reservation {
+  id                    String            @id @default(cuid())
+  unitId                String
+  guestId               String
+  status                ReservationStatus @default(DRAFT)
+  checkIn               DateTime
+  checkOut              DateTime
+  nightlyRate           Decimal?          @db.Decimal(10, 2)
+  cleaningFee           Decimal?          @db.Decimal(10, 2)
+  totalAmount           Decimal?          @db.Decimal(10, 2)
+  depositRequired       Boolean           @default(false)
+  depositAmount         Decimal?          @db.Decimal(10, 2)
+  depositStatus         DepositStatus     @default(PENDING)
+  depositMethod         String?
+  depositTxnId          String?
+  depositHeldAt         DateTime?
+  depositPaidAt         DateTime?
+  depositRefundedAt     DateTime?
+  depositRefundAmt      Decimal?          @db.Decimal(10, 2)
+  depositRefundReason   String?
+  depositForfeitAmt     Decimal?          @db.Decimal(10, 2)
+  depositForfeitReason  String?
+  depositEvidenceUrls   String[]          @db.Text
+  calendarEventId       String?
+  headCount             Int?              @default(1)
+  specialRequests       String?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  // Relations
+  guest         Guest          @relation(fields: [guestId], references: [id])
+  unit          Unit           @relation(fields: [unitId], references: [id])
+  depositEvents DepositEvent[]
+  cleaningTasks CleaningTask[]
+
+  @@map("reservations")
+}
+
+model DepositEvent {
+  id            String       @id @default(cuid())
+  reservationId String
+  type          String       // request | collect | refund | forfeit | fail
+  status        DepositStatus
+  amount        Decimal      @db.Decimal(10, 2)
+  method        String?
+  txnId         String?
+  reason        String?
+  evidenceUrls  String[]     @db.Text
+  actedById     String?
+  createdAt     DateTime     @default(now())
+
+  // Relations
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  actedBy     User?       @relation(fields: [actedById], references: [id])
+
+  @@map("deposit_events")
+}
+
+model CleaningTask {
+  id              String         @id @default(cuid())
+  reservationId   String
+  unitId          String
+  assignedToUserId String?
+  status          CleaningStatus @default(PENDING)
+  scheduledDate   DateTime
+  startedAt       DateTime?
+  completedAt     DateTime?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  reservation Reservation      @relation(fields: [reservationId], references: [id])
+  unit        Unit             @relation(fields: [unitId], references: [id])
+  assignedTo  User?            @relation(fields: [assignedToUserId], references: [id])
+  photos      CleaningPhoto[]
+
+  @@map("cleaning_tasks")
+}
+
+model CleaningPhoto {
+  id            String       @id @default(cuid())
+  cleaningTaskId String
+  url           String
+  caption       String?
+  createdAt     DateTime     @default(now())
+
+  // Relations
+  cleaningTask CleaningTask @relation(fields: [cleaningTaskId], references: [id], onDelete: Cascade)
+
+  @@map("cleaning_photos")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  action     String
+  before     Json?
+  after      Json?
+  userId     String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model GoogleCalendar {
+  id           String   @id @default(cuid())
+  unitId       String   @unique
+  calendarId   String
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("google_calendars")
+}
