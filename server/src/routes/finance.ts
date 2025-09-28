@@ -3,7 +3,7 @@ import { FinanceController } from '../controllers/FinanceController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateQuery } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '@prisma/client';
+import { Role } from '../types';
 
 const router = Router();
 const financeController = new FinanceController();

@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
-import { PrismaClient, CleaningStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { CleaningStatus } from '../types';
 
 const prisma = new PrismaClient();
 
 export class FinanceController {
-  async getDashboard(req: Request, res: Response) {
+  async getDashboard(req: Request, res: Response): Promise<void> {
     try {
       const today = new Date();
       const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -117,7 +118,7 @@ export class FinanceController {
     }
   }
 
-  async getCleaningConsolidation(req: Request, res: Response) {
+  async getCleaningConsolidation(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -218,7 +219,7 @@ export class FinanceController {
     }
   }
 
-  async exportCleaningConsolidation(req: Request, res: Response) {
+  async exportCleaningConsolidation(req: Request, res: Response): Promise<void> {
     try {
       const { fromDate, toDate, unitId } = req.query;
 
@@ -273,7 +274,7 @@ export class FinanceController {
       // Generate CSV
       const csvHeader = 'Task ID,Unit,Guest,Cleaner,Scheduled Date,Started At,Completed At,Notes,Photos Count\n';
       
-      const csvRows = cleanings.map(cleaning => {
+      const csvRows = cleanings.map((cleaning: any) => {
         return [
           cleaning.id,
           `${cleaning.unit.name} (${cleaning.unit.code})`,
@@ -301,7 +302,7 @@ export class FinanceController {
     }
   }
 
-  async approveCleaningConsolidation(req: Request, res: Response) {
+  async approveCleaningConsolidation(req: Request, res: Response): Promise<void> {
     try {
       const { cleaningTaskIds, notes } = req.body;
 
@@ -350,7 +351,7 @@ export class FinanceController {
     }
   }
 
-  async getDepositsSummary(req: Request, res: Response) {
+  async getDepositsSummary(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -446,7 +447,7 @@ export class FinanceController {
     }
   }
 
-  async exportDepositsSummary(req: Request, res: Response) {
+  async exportDepositsSummary(req: Request, res: Response): Promise<void> {
     try {
       const { fromDate, toDate, status } = req.query;
 
@@ -491,7 +492,7 @@ export class FinanceController {
       // Generate CSV
       const csvHeader = 'Reservation ID,Guest,Unit,Deposit Amount,Status,Method,Collected At,Refunded At,Refund Amount,Forfeit Amount\n';
       
-      const csvRows = reservations.map(reservation => {
+      const csvRows = reservations.map((reservation: any) => {
         return [
           reservation.id,
           reservation.guest.fullName,
@@ -520,7 +521,7 @@ export class FinanceController {
     }
   }
 
-  async getMonthlyReport(req: Request, res: Response) {
+  async getMonthlyReport(req: Request, res: Response): Promise<void> {
     try {
       const { year = new Date().getFullYear(), month = new Date().getMonth() + 1 } = req.query;
 
@@ -552,7 +553,7 @@ export class FinanceController {
       });
 
       // Calculate revenue by unit
-      const revenueByUnit = reservations.reduce((acc, reservation) => {
+      const revenueByUnit = reservations.reduce((acc: any, reservation: any) => {
         const unitKey = `${reservation.unit.name} (${reservation.unit.code})`;
         if (!acc[unitKey]) {
           acc[unitKey] = {
@@ -569,8 +570,8 @@ export class FinanceController {
       }, {} as any);
 
       // Calculate totals
-      const totalRevenue = reservations.reduce((sum, r) => sum + Number(r.totalAmount || 0), 0);
-      const totalCleaningFees = reservations.reduce((sum, r) => sum + Number(r.cleaningFee || 0), 0);
+      const totalRevenue = reservations.reduce((sum: any, r: any) => sum + Number(r.totalAmount || 0), 0);
+      const totalCleaningFees = reservations.reduce((sum: any, r: any) => sum + Number(r.cleaningFee || 0), 0);
       const totalReservations = reservations.length;
 
       // Get deposit summary

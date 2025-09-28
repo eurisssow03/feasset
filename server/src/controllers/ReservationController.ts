@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { PrismaClient, ReservationStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { ReservationStatus } from '../types';
 import { AuthRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
 export class ReservationController {
-  async getAllReservations(req: Request, res: Response) {
+  async getAllReservations(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -117,7 +118,7 @@ export class ReservationController {
     }
   }
 
-  async createReservation(req: AuthRequest, res: Response) {
+  async createReservation(req: AuthRequest, res: Response): Promise<void> {
     try {
       const {
         unitId,
@@ -249,7 +250,7 @@ export class ReservationController {
     }
   }
 
-  async getReservationById(req: Request, res: Response) {
+  async getReservationById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -305,7 +306,7 @@ export class ReservationController {
     }
   }
 
-  async updateReservation(req: Request, res: Response) {
+  async updateReservation(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -408,7 +409,7 @@ export class ReservationController {
     }
   }
 
-  async deleteReservation(req: Request, res: Response) {
+  async deleteReservation(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -449,7 +450,7 @@ export class ReservationController {
     }
   }
 
-  async checkIn(req: AuthRequest, res: Response) {
+  async checkIn(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -521,7 +522,7 @@ export class ReservationController {
     }
   }
 
-  async checkOut(req: AuthRequest, res: Response) {
+  async checkOut(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -591,7 +592,7 @@ export class ReservationController {
     }
   }
 
-  async extend(req: Request, res: Response) {
+  async extend(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { newCheckOut, reason } = req.body;
@@ -701,7 +702,7 @@ export class ReservationController {
     }
   }
 
-  async cancel(req: Request, res: Response) {
+  async cancel(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { reason } = req.body;

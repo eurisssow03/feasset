@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { PrismaClient, DepositStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { DepositStatus } from '../types';
 import { AuthRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
 export class DepositController {
-  async getDepositsLedger(req: Request, res: Response) {
+  async getDepositsLedger(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -115,7 +116,7 @@ export class DepositController {
     }
   }
 
-  async exportDepositsLedger(req: Request, res: Response) {
+  async exportDepositsLedger(req: Request, res: Response): Promise<void> {
     try {
       const { status, method, fromDate, toDate } = req.query;
 
@@ -162,7 +163,7 @@ export class DepositController {
       // Generate CSV
       const csvHeader = 'Reservation ID,Guest Name,Guest Email,Unit,Check In,Check Out,Deposit Amount,Deposit Status,Deposit Method,Transaction ID,Collected At,Refunded At,Refund Amount,Forfeit Amount,Created At\n';
       
-      const csvRows = reservations.map(reservation => {
+      const csvRows = reservations.map((reservation: any) => {
         return [
           reservation.id,
           reservation.guest.fullName,
@@ -196,7 +197,7 @@ export class DepositController {
     }
   }
 
-  async requestDeposit(req: AuthRequest, res: Response) {
+  async requestDeposit(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason } = req.body;
@@ -206,17 +207,19 @@ export class DepositController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (reservation.depositRequired) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Deposit is already required for this reservation',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({
@@ -270,7 +273,7 @@ export class DepositController {
     }
   }
 
-  async collectDeposit(req: AuthRequest, res: Response) {
+  async collectDeposit(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { method, txnId, evidenceUrls = [] } = req.body;
@@ -280,10 +283,11 @@ export class DepositController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (!reservation.depositRequired) {
@@ -355,7 +359,7 @@ export class DepositController {
     }
   }
 
-  async refundDeposit(req: AuthRequest, res: Response) {
+  async refundDeposit(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason, method, txnId, evidenceUrls = [] } = req.body;
@@ -365,10 +369,11 @@ export class DepositController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (!['HELD', 'PAID'].includes(reservation.depositStatus)) {
@@ -447,7 +452,7 @@ export class DepositController {
     }
   }
 
-  async forfeitDeposit(req: AuthRequest, res: Response) {
+  async forfeitDeposit(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason, evidenceUrls = [] } = req.body;
@@ -457,10 +462,11 @@ export class DepositController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (!['HELD', 'PAID'].includes(reservation.depositStatus)) {
@@ -532,7 +538,7 @@ export class DepositController {
     }
   }
 
-  async failDeposit(req: AuthRequest, res: Response) {
+  async failDeposit(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { reason } = req.body;
@@ -542,10 +548,11 @@ export class DepositController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (reservation.depositStatus !== 'PENDING') {

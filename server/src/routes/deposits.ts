@@ -3,7 +3,7 @@ import { DepositController } from '../controllers/DepositController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '@prisma/client';
+import { Role } from '../types';
 
 const router = Router();
 const depositController = new DepositController();

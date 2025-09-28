@@ -3,7 +3,7 @@ import { UnitController } from '../controllers/UnitController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateQuery, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '@prisma/client';
+import { Role } from '../types';
 
 const router = Router();
 const unitController = new UnitController();

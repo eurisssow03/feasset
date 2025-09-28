@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 export class UploadController {
-  async uploadCleaningPhotos(req: AuthRequest, res: Response) {
+  async uploadCleaningPhotos(req: AuthRequest, res: Response): Promise<void> {
     try {
       const files = req.files as Express.Multer.File[];
 
@@ -45,7 +45,7 @@ export class UploadController {
     }
   }
 
-  async uploadDepositEvidence(req: AuthRequest, res: Response) {
+  async uploadDepositEvidence(req: AuthRequest, res: Response): Promise<void> {
     try {
       const files = req.files as Express.Multer.File[];
 
@@ -86,7 +86,7 @@ export class UploadController {
     }
   }
 
-  async uploadGeneral(req: AuthRequest, res: Response) {
+  async uploadGeneral(req: AuthRequest, res: Response): Promise<void> {
     try {
       const file = req.file;
 
@@ -119,7 +119,7 @@ export class UploadController {
     }
   }
 
-  async getFile(req: AuthRequest, res: Response) {
+  async getFile(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { filename } = req.params;
 

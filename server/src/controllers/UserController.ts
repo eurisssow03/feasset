@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Role } from '../types';
 import { AuthRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
@@ -47,7 +48,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async getAllUsers(req: Request, res: Response) {
+  async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -155,7 +156,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async createUser(req: AuthRequest, res: Response) {
+  async createUser(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { name, email, password, role } = req.body;
 
@@ -165,10 +166,11 @@ export class UserController {
       });
 
       if (existingUser) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'User already exists',
         });
+        return;
       }
 
       // Hash password
@@ -229,7 +231,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async getUserById(req: Request, res: Response) {
+  async getUserById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -247,10 +249,11 @@ export class UserController {
       });
 
       if (!user) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'User not found',
         });
+        return;
       }
 
       res.json({
@@ -307,7 +310,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async updateUser(req: Request, res: Response) {
+  async updateUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -387,7 +390,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async deleteUser(req: Request, res: Response) {
+  async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 

@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class GuestController {
-  async getAllGuests(req: Request, res: Response) {
+  async getAllGuests(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -62,7 +62,7 @@ export class GuestController {
     }
   }
 
-  async createGuest(req: Request, res: Response) {
+  async createGuest(req: Request, res: Response): Promise<void> {
     try {
       const { fullName, phone, email, notes } = req.body;
 
@@ -95,7 +95,7 @@ export class GuestController {
     }
   }
 
-  async getGuestById(req: Request, res: Response) {
+  async getGuestById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -142,7 +142,7 @@ export class GuestController {
     }
   }
 
-  async updateGuest(req: Request, res: Response) {
+  async updateGuest(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -184,7 +184,7 @@ export class GuestController {
     }
   }
 
-  async deleteGuest(req: Request, res: Response) {
+  async deleteGuest(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 

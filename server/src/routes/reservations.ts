@@ -3,7 +3,7 @@ import { ReservationController } from '../controllers/ReservationController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateQuery, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '@prisma/client';
+import { Role } from '../types';
 
 const router = Router();
 const reservationController = new ReservationController();

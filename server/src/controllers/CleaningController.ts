@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { PrismaClient, CleaningStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { CleaningStatus } from '../types';
 import { AuthRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
 export class CleaningController {
-  async getAllCleanings(req: Request, res: Response) {
+  async getAllCleanings(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -103,7 +104,7 @@ export class CleaningController {
     }
   }
 
-  async getMyTasks(req: AuthRequest, res: Response) {
+  async getMyTasks(req: AuthRequest, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -174,7 +175,7 @@ export class CleaningController {
     }
   }
 
-  async getCleaningById(req: Request, res: Response) {
+  async getCleaningById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -232,7 +233,7 @@ export class CleaningController {
     }
   }
 
-  async assignCleaning(req: Request, res: Response) {
+  async assignCleaning(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { assignedToUserId, scheduledDate, notes } = req.body;
@@ -320,7 +321,7 @@ export class CleaningController {
     }
   }
 
-  async startCleaning(req: AuthRequest, res: Response) {
+  async startCleaning(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -399,7 +400,7 @@ export class CleaningController {
     }
   }
 
-  async completeCleaning(req: AuthRequest, res: Response) {
+  async completeCleaning(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { notes, photoUrls = [] } = req.body;
@@ -491,7 +492,7 @@ export class CleaningController {
     }
   }
 
-  async updateCleaning(req: Request, res: Response) {
+  async updateCleaning(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;

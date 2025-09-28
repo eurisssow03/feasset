@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class UnitController {
-  async getAllUnits(req: Request, res: Response) {
+  async getAllUnits(req: Request, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -68,7 +68,7 @@ export class UnitController {
     }
   }
 
-  async createUnit(req: Request, res: Response) {
+  async createUnit(req: Request, res: Response): Promise<void> {
     try {
       const { name, code, address, active = true } = req.body;
 
@@ -114,7 +114,7 @@ export class UnitController {
     }
   }
 
-  async getUnitById(req: Request, res: Response) {
+  async getUnitById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -150,7 +150,7 @@ export class UnitController {
     }
   }
 
-  async updateUnit(req: Request, res: Response) {
+  async updateUnit(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const updateData = req.body;
@@ -207,7 +207,7 @@ export class UnitController {
     }
   }
 
-  async deleteUnit(req: Request, res: Response) {
+  async deleteUnit(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -257,7 +257,7 @@ export class UnitController {
     }
   }
 
-  async syncCalendar(req: Request, res: Response) {
+  async syncCalendar(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { calendarId } = req.body;

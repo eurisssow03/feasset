@@ -12,7 +12,7 @@ export class CalendarController {
     process.env.GOOGLE_REDIRECT_URI
   );
 
-  async connect(req: AuthRequest, res: Response) {
+  async connect(req: AuthRequest, res: Response): Promise<void> {
     try {
       const scopes = ['https://www.googleapis.com/auth/calendar'];
       
@@ -38,7 +38,7 @@ export class CalendarController {
     }
   }
 
-  async callback(req: Request, res: Response) {
+  async callback(req: Request, res: Response): Promise<void> {
     try {
       const { code, state } = req.query;
 
@@ -88,7 +88,7 @@ export class CalendarController {
     }
   }
 
-  async disconnect(req: AuthRequest, res: Response) {
+  async disconnect(req: AuthRequest, res: Response): Promise<void> {
     try {
       await prisma.googleCalendar.deleteMany({});
 
@@ -105,7 +105,7 @@ export class CalendarController {
     }
   }
 
-  async syncUnit(req: Request, res: Response) {
+  async syncUnit(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -158,7 +158,7 @@ export class CalendarController {
     }
   }
 
-  async getUnitEvents(req: Request, res: Response) {
+  async getUnitEvents(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { fromDate, toDate } = req.query;
@@ -236,7 +236,7 @@ export class CalendarController {
     }
   }
 
-  async getStatus(req: Request, res: Response) {
+  async getStatus(req: Request, res: Response): Promise<void> {
     try {
       const calendarConfig = await prisma.googleCalendar.findFirst();
 

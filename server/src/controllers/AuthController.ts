@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { PrismaClient, Role } from '@prisma/client';
-import { AuthRequest } from '../middleware/auth';
+import { PrismaClient } from '@prisma/client';
+import { Role, AuthRequest } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -35,7 +35,7 @@ export class AuthController {
    *       401:
    *         description: Invalid credentials
    */
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
 
@@ -53,19 +53,21 @@ export class AuthController {
       });
 
       if (!user || !user.isActive) {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           error: 'Invalid credentials',
         });
+        return;
       }
 
       // Check password
       const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
       if (!isPasswordValid) {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           error: 'Invalid credentials',
         });
+        return;
       }
 
       // Generate tokens
@@ -131,7 +133,7 @@ export class AuthController {
    *       403:
    *         description: Insufficient permissions
    */
-  async register(req: AuthRequest, res: Response) {
+  async register(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { name, email, password, role } = req.body;
 
@@ -141,10 +143,11 @@ export class AuthController {
       });
 
       if (existingUser) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'User already exists',
         });
+        return;
       }
 
       // Hash password
@@ -205,7 +208,7 @@ export class AuthController {
    *       401:
    *         description: Invalid refresh token
    */
-  async refreshToken(req: Request, res: Response) {
+  async refreshToken(req: Request, res: Response): Promise<void> {
     try {
       const { refreshToken } = req.body;
 
@@ -229,10 +232,11 @@ export class AuthController {
       });
 
       if (!user || !user.isActive) {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           error: 'Invalid refresh token',
         });
+        return;
       }
 
       // Generate new access token
@@ -265,7 +269,7 @@ export class AuthController {
    *       200:
    *         description: Logout successful
    */
-  async logout(req: AuthRequest, res: Response) {
+  async logout(req: AuthRequest, res: Response): Promise<void> {
     try {
       // In a real application, you might want to blacklist the token
       // For now, we'll just return success
@@ -296,13 +300,14 @@ export class AuthController {
    *       401:
    *         description: Unauthorized
    */
-  async getProfile(req: AuthRequest, res: Response) {
+  async getProfile(req: AuthRequest, res: Response): Promise<void> {
     try {
       if (!req.user) {
-        return res.status(401).json({
+        res.status(401).json({
           success: false,
           error: 'User not authenticated',
         });
+        return;
       }
 
       res.json({
@@ -342,7 +347,7 @@ export class AuthController {
    *       404:
    *         description: User not found
    */
-  async requestPasswordReset(req: Request, res: Response) {
+  async requestPasswordReset(req: Request, res: Response): Promise<void> {
     try {
       const { email } = req.body;
 
@@ -353,10 +358,11 @@ export class AuthController {
       });
 
       if (!user) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'User not found',
         });
+        return;
       }
 
       // Generate reset token
@@ -411,7 +417,7 @@ export class AuthController {
    *       400:
    *         description: Invalid or expired token
    */
-  async updatePassword(req: Request, res: Response) {
+  async updatePassword(req: Request, res: Response): Promise<void> {
     try {
       const { token, password } = req.body;
 
@@ -419,10 +425,11 @@ export class AuthController {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback') as any;
 
       if (decoded.type !== 'password-reset') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Invalid token',
         });
+        return;
       }
 
       // Hash new password

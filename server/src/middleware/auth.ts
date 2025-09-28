@@ -1,27 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Role, AuthRequest } from '../types';
 
 const prisma = new PrismaClient();
 
-export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    email: string;
-    role: Role;
-    name: string;
-  };
-}
-
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'Access token required',
       });
+      return;
     }
 
     const token = authHeader.substring(7);
@@ -45,16 +38,17 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
     });
 
     if (!user || !user.isActive) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'User not found or inactive',
       });
+      return;
     }
 
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: 'Invalid token',
     });
@@ -62,37 +56,41 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 };
 
 export const authorize = (...roles: Role[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: 'Authentication required',
       });
+      return;
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: 'Insufficient permissions',
       });
+      return;
     }
 
     next();
   };
 };
 
-export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return next();
+      next();
+      return;
     }
 
     const token = authHeader.substring(7);
     
     if (!process.env.JWT_SECRET) {
-      return next();
+      next();
+      return;
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;

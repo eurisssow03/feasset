@@ -3,7 +3,7 @@ import { GuestController } from '../controllers/GuestController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateQuery, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '@prisma/client';
+import { Role } from '../types';
 
 const router = Router();
 const guestController = new GuestController();
