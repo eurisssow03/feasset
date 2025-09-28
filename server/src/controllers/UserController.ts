@@ -321,10 +321,11 @@ export class UserController {
       });
 
       if (!existingUser) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'User not found',
         });
+        return;
       }
 
       // Check if email is being changed and if it's already taken
@@ -400,10 +401,11 @@ export class UserController {
       });
 
       if (!existingUser) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'User not found',
         });
+        return;
       }
 
       // Soft delete by setting isActive to false

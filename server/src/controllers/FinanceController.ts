@@ -307,10 +307,11 @@ export class FinanceController {
       const { cleaningTaskIds, notes } = req.body;
 
       if (!Array.isArray(cleaningTaskIds) || cleaningTaskIds.length === 0) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Cleaning task IDs are required',
         });
+        return;
       }
 
       // Verify all tasks exist and are completed
@@ -615,7 +616,7 @@ export class FinanceController {
             },
           },
           revenueByUnit: Object.values(revenueByUnit),
-          reservations: reservations.map(r => ({
+          reservations: reservations.map((r: any) => ({
             id: r.id,
             unit: `${r.unit.name} (${r.unit.code})`,
             guest: r.guest.fullName,

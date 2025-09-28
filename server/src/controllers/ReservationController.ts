@@ -287,10 +287,11 @@ export class ReservationController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       res.json({
@@ -459,10 +460,11 @@ export class ReservationController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (reservation.status !== 'CONFIRMED') {
@@ -531,10 +533,11 @@ export class ReservationController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (reservation.status !== 'CHECKED_IN') {
@@ -602,10 +605,11 @@ export class ReservationController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (!['CONFIRMED', 'CHECKED_IN'].includes(reservation.status)) {
@@ -712,10 +716,11 @@ export class ReservationController {
       });
 
       if (!reservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
+        return;
       }
 
       if (reservation.status === 'CANCELED') {

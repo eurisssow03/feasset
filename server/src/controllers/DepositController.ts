@@ -291,17 +291,19 @@ export class DepositController {
       }
 
       if (!reservation.depositRequired) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'No deposit required for this reservation',
         });
+        return;
       }
 
       if (reservation.depositStatus === 'PAID') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Deposit already collected',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({

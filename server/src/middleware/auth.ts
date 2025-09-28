@@ -3,11 +3,13 @@ import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { Role, AuthRequest } from '../types';
 
+export { AuthRequest };
+
 const prisma = new PrismaClient();
 
 export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization as string;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       res.status(401).json({
@@ -79,7 +81,7 @@ export const authorize = (...roles: Role[]) => {
 
 export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorization as string;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       next();

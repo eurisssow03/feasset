@@ -135,7 +135,12 @@ export class AuthController {
    */
   async register(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const { name, email, password, role } = req.body;
+      const { name, email, password, role } = req.body as {
+        name: string;
+        email: string;
+        password: string;
+        role: Role;
+      };
 
       // Check if user already exists
       const existingUser = await prisma.user.findUnique({

@@ -131,10 +131,11 @@ export class UnitController {
       });
 
       if (!unit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       res.json({

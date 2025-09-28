@@ -123,10 +123,11 @@ export class GuestController {
       });
 
       if (!guest) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Guest not found',
         });
+        return;
       }
 
       res.json({
@@ -153,10 +154,11 @@ export class GuestController {
       });
 
       if (!existingGuest) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Guest not found',
         });
+        return;
       }
 
       const guest = await prisma.guest.update({
@@ -201,10 +203,11 @@ export class GuestController {
       });
 
       if (!existingGuest) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Guest not found',
         });
+        return;
       }
 
       // Check if guest has reservations

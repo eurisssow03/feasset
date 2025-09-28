@@ -214,10 +214,11 @@ export class CleaningController {
       });
 
       if (!cleaning) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Cleaning task not found',
         });
+        return;
       }
 
       res.json({
@@ -243,10 +244,11 @@ export class CleaningController {
       });
 
       if (!cleaning) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Cleaning task not found',
         });
+        return;
       }
 
       // Verify assigned user exists and is a cleaner
@@ -330,10 +332,11 @@ export class CleaningController {
       });
 
       if (!cleaning) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Cleaning task not found',
         });
+        return;
       }
 
       if (cleaning.assignedToUserId !== req.user?.id) {
@@ -410,10 +413,11 @@ export class CleaningController {
       });
 
       if (!cleaning) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Cleaning task not found',
         });
+        return;
       }
 
       if (cleaning.assignedToUserId !== req.user?.id) {
@@ -502,10 +506,11 @@ export class CleaningController {
       });
 
       if (!cleaning) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Cleaning task not found',
         });
+        return;
       }
 
       const updatedCleaning = await prisma.cleaningTask.update({

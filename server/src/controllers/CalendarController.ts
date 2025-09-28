@@ -43,10 +43,11 @@ export class CalendarController {
       const { code, state } = req.query;
 
       if (!code || !state) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Missing authorization code or state',
         });
+        return;
       }
 
       // Exchange code for tokens
