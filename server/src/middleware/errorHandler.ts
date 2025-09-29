@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 export interface AppError extends Error {
   statusCode?: number;
@@ -9,7 +9,7 @@ export const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: any
 ) => {
   let error = { ...err };
   error.message = err.message;

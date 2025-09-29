@@ -16,8 +16,8 @@ export class DepositController {
         toDate
       } = req.query;
 
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const take = parseInt(limit);
 
       // Build where clause
       const where: any = {};
@@ -100,10 +100,10 @@ export class DepositController {
           totalCount: summary._count.depositStatus,
         },
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parseInt(page),
+          limit: parseInt(limit),
           total,
-          pages: Math.ceil(total / Number(limit)),
+          pages: Math.ceil(total / parseInt(limit)),
         },
       });
     } catch (error) {
@@ -385,9 +385,9 @@ export class DepositController {
         return;
       }
 
-      const refundAmount = Number(amount);
-      const currentDepositAmount = Number(reservation.depositAmount || 0);
-      const currentRefundAmount = Number(reservation.depositRefundAmt || 0);
+      const refundAmount = parseFloat(amount);
+      const currentDepositAmount = parseFloat(reservation.depositAmount || 0);
+      const currentRefundAmount = parseFloat(reservation.depositRefundAmt || 0);
 
       if (refundAmount > (currentDepositAmount - currentRefundAmount)) {
         res.status(400).json({
@@ -480,8 +480,8 @@ export class DepositController {
         return;
       }
 
-      const forfeitAmount = Number(amount);
-      const currentDepositAmount = Number(reservation.depositAmount || 0);
+      const forfeitAmount = parseFloat(amount);
+      const currentDepositAmount = parseFloat(reservation.depositAmount || 0);
 
       if (forfeitAmount > currentDepositAmount) {
         res.status(400).json({

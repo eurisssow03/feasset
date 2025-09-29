@@ -13,8 +13,8 @@ export class UnitController {
         active
       } = req.query;
 
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const take = parseInt(limit);
 
       // Build where clause
       const where: any = {};
@@ -53,10 +53,10 @@ export class UnitController {
         success: true,
         data: units,
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parseInt(page),
+          limit: parseInt(limit),
           total,
-          pages: Math.ceil(total / Number(limit)),
+          pages: Math.ceil(total / parseInt(limit)),
         },
       });
     } catch (error) {

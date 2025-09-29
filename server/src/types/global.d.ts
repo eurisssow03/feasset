@@ -11,6 +11,32 @@ declare module 'multer';
 declare module 'path';
 declare module 'fs';
 
+// Express types
+declare module 'express' {
+  interface Request {
+    user?: any;
+    params: any;
+    query: any;
+    body: any;
+    headers: any;
+    files?: any[];
+    file?: any;
+    originalUrl?: string;
+  }
+  
+  interface Response {
+    status(code: number): Response;
+    json(obj: any): Response;
+    send(data: any): Response;
+    setHeader(name: string, value: string): void;
+    end(data?: any): void;
+  }
+  
+  interface NextFunction {
+    (err?: any): void;
+  }
+}
+
 // Node.js global types
 declare var process: any;
 declare var console: any;

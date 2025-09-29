@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { Role, AuthRequest } from '../types';
@@ -7,7 +7,7 @@ export { AuthRequest };
 
 const prisma = new PrismaClient();
 
-export const authenticate = async (req: Request & AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const authenticate = async (req: Request & AuthRequest, res: Response, next: any): Promise<void> => {
   try {
     const authHeader = req.headers.authorization as string;
     
@@ -58,7 +58,7 @@ export const authenticate = async (req: Request & AuthRequest, res: Response, ne
 };
 
 export const authorize = (...roles: Role[]) => {
-  return (req: Request & AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: Request & AuthRequest, res: Response, next: any): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
@@ -79,7 +79,7 @@ export const authorize = (...roles: Role[]) => {
   };
 };
 
-export const optionalAuth = async (req: Request & AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const optionalAuth = async (req: Request & AuthRequest, res: Response, next: any): Promise<void> => {
   try {
     const authHeader = req.headers.authorization as string;
     

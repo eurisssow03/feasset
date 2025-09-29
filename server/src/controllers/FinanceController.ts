@@ -129,8 +129,8 @@ export class FinanceController {
         unitId
       } = req.query;
 
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const take = parseInt(limit);
 
       // Build where clause
       const where: any = {
@@ -204,10 +204,10 @@ export class FinanceController {
           totalTasks: summary._count.id,
         },
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parseInt(page),
+          limit: parseInt(limit),
           total,
-          pages: Math.ceil(total / Number(limit)),
+          pages: Math.ceil(total / parseInt(limit)),
         },
       });
     } catch (error) {
@@ -363,8 +363,8 @@ export class FinanceController {
         status
       } = req.query;
 
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const take = parseInt(limit);
 
       // Build where clause
       const where: any = {
@@ -434,10 +434,10 @@ export class FinanceController {
           totalCount: summary._count.depositStatus,
         },
         pagination: {
-          page: Number(page),
-          limit: Number(limit),
+          page: parseInt(page),
+          limit: parseInt(limit),
           total,
-          pages: Math.ceil(total / Number(limit)),
+          pages: Math.ceil(total / parseInt(limit)),
         },
       });
     } catch (error) {
@@ -527,8 +527,8 @@ export class FinanceController {
     try {
       const { year = new Date().getFullYear(), month = new Date().getMonth() + 1 } = req.query;
 
-      const startOfMonth = new Date(Number(year), Number(month) - 1, 1);
-      const endOfMonth = new Date(Number(year), Number(month), 0);
+      const startOfMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
+      const endOfMonth = new Date(parseInt(year), parseInt(month), 0);
 
       // Get reservations for the month
       const reservations = await prisma.reservation.findMany({
@@ -566,14 +566,14 @@ export class FinanceController {
           };
         }
         acc[unitKey].reservations += 1;
-        acc[unitKey].revenue += Number(reservation.totalAmount || 0);
-        acc[unitKey].cleaningFees += Number(reservation.cleaningFee || 0);
+        acc[unitKey].revenue += parseFloat(reservation.totalAmount || 0);
+        acc[unitKey].cleaningFees += parseFloat(reservation.cleaningFee || 0);
         return acc;
       }, {} as any);
 
       // Calculate totals
-      const totalRevenue = reservations.reduce((sum: any, r: any) => sum + Number(r.totalAmount || 0), 0);
-      const totalCleaningFees = reservations.reduce((sum: any, r: any) => sum + Number(r.cleaningFee || 0), 0);
+      const totalRevenue = reservations.reduce((sum: any, r: any) => sum + parseFloat(r.totalAmount || 0), 0);
+      const totalCleaningFees = reservations.reduce((sum: any, r: any) => sum + parseFloat(r.cleaningFee || 0), 0);
       const totalReservations = reservations.length;
 
       // Get deposit summary
@@ -599,8 +599,8 @@ export class FinanceController {
         success: true,
         data: {
           period: {
-            year: Number(year),
-            month: Number(month),
+            year: parseInt(year),
+            month: parseInt(month),
             startDate: startOfMonth.toISOString().split('T')[0],
             endDate: endOfMonth.toISOString().split('T')[0],
           },
@@ -613,7 +613,7 @@ export class FinanceController {
               total: depositSummary._sum.depositAmount || 0,
               refunded: depositSummary._sum.depositRefundAmt || 0,
               forfeited: depositSummary._sum.depositForfeitAmt || 0,
-              net: Number(depositSummary._sum.depositAmount || 0) - Number(depositSummary._sum.depositRefundAmt || 0),
+              net: parseFloat(depositSummary._sum.depositAmount || 0) - parseFloat(depositSummary._sum.depositRefundAmt || 0),
             },
           },
           revenueByUnit: Object.values(revenueByUnit),
