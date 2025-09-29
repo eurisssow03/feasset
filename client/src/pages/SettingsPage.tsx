@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, Calendar, Database, Shield, Bell, User, Globe, Save, CheckCircle, AlertCircle } from 'lucide-react';
+import { Settings, Calendar, Database, Shield, Bell, Globe, Save, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { toast } from 'react-hot-toast';
@@ -43,7 +43,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleInputChange = (section: string, key: string, value: any) => {
+  const handleInputChange = (key: string, value: any) => {
     setSettings(prev => ({
       ...prev,
       [key]: value
@@ -80,7 +80,7 @@ export default function SettingsPage() {
                 <input
                   type="text"
                   value={settings.businessName}
-                  onChange={(e: any) => handleInputChange('general', 'businessName', e.target.value)}
+                  onChange={(e: any) => handleInputChange('businessName', e.target.value)}
                   className="input w-full"
                 />
               </div>
@@ -88,7 +88,7 @@ export default function SettingsPage() {
                 <label className="label">Timezone</label>
                 <select
                   value={settings.timezone}
-                  onChange={(e: any) => handleInputChange('general', 'timezone', e.target.value)}
+                  onChange={(e: any) => handleInputChange('timezone', e.target.value)}
                   className="input w-full"
                 >
                   <option value="UTC">UTC</option>
@@ -102,7 +102,7 @@ export default function SettingsPage() {
                 <label className="label">Currency</label>
                 <select
                   value={settings.currency}
-                  onChange={(e: any) => handleInputChange('general', 'currency', e.target.value)}
+                  onChange={(e: any) => handleInputChange('currency', e.target.value)}
                   className="input w-full"
                 >
                   <option value="USD">USD ($)</option>
@@ -115,7 +115,7 @@ export default function SettingsPage() {
                 <label className="label">Language</label>
                 <select
                   value={settings.language}
-                  onChange={(e: any) => handleInputChange('general', 'language', e.target.value)}
+                  onChange={(e: any) => handleInputChange('language', e.target.value)}
                   className="input w-full"
                 >
                   <option value="en">English</option>
@@ -148,7 +148,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.calendarSync}
-                    onChange={(e: any) => handleInputChange('calendar', 'calendarSync', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('calendarSync', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -161,7 +161,7 @@ export default function SettingsPage() {
                   <input
                     type="text"
                     value={settings.calendarId}
-                    onChange={(e: any) => handleInputChange('calendar', 'calendarId', e.target.value)}
+                    onChange={(e: any) => handleInputChange('calendarId', e.target.value)}
                     placeholder="your-calendar@gmail.com"
                     className="input w-full"
                   />
@@ -205,7 +205,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.emailNotifications}
-                    onChange={(e: any) => handleInputChange('notifications', 'emailNotifications', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('emailNotifications', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -221,7 +221,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.smsNotifications}
-                    onChange={(e: any) => handleInputChange('notifications', 'smsNotifications', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('smsNotifications', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -237,7 +237,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.reservationAlerts}
-                    onChange={(e: any) => handleInputChange('notifications', 'reservationAlerts', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('reservationAlerts', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -253,7 +253,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.cleaningAlerts}
-                    onChange={(e: any) => handleInputChange('notifications', 'cleaningAlerts', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('cleaningAlerts', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -283,7 +283,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.twoFactorAuth}
-                    onChange={(e: any) => handleInputChange('security', 'twoFactorAuth', e.target.checked)}
+                    onChange={(e: any) => handleInputChange('twoFactorAuth', e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -294,7 +294,7 @@ export default function SettingsPage() {
                 <label className="label">Session Timeout (minutes)</label>
                 <select
                   value={settings.sessionTimeout}
-                  onChange={(e: any) => handleInputChange('security', 'sessionTimeout', parseInt(e.target.value))}
+                  onChange={(e: any) => handleInputChange('sessionTimeout', parseInt(e.target.value))}
                   className="input w-full"
                 >
                   <option value={15}>15 minutes</option>
@@ -309,7 +309,7 @@ export default function SettingsPage() {
                 <label className="label">Password Policy</label>
                 <select
                   value={settings.passwordPolicy}
-                  onChange={(e: any) => handleInputChange('security', 'passwordPolicy', e.target.value)}
+                  onChange={(e: any) => handleInputChange('passwordPolicy', e.target.value)}
                   className="input w-full"
                 >
                   <option value="low">Low (6+ characters)</option>

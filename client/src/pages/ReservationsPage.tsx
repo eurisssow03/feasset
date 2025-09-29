@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Search, Filter, Edit, Trash2, Calendar, User, Building, DollarSign, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, Calendar, Building, DollarSign, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { toast } from 'react-hot-toast';
