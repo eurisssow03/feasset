@@ -3,6 +3,7 @@ import {
   Home, 
   Calendar, 
   Building, 
+  MapPin,
   Users, 
   Sparkles, 
   DollarSign, 
@@ -22,6 +23,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home, roles: ['ADMIN', 'FINANCE', 'CLEANER', 'AGENT'] },
   { name: 'Reservations', href: '/reservations', icon: Calendar, roles: ['ADMIN', 'FINANCE', 'CLEANER', 'AGENT'] },
   { name: 'Units', href: '/units', icon: Building, roles: ['ADMIN', 'FINANCE', 'CLEANER', 'AGENT'] },
+  { name: 'Locations', href: '/locations', icon: MapPin, roles: ['ADMIN', 'FINANCE', 'CLEANER', 'AGENT'] },
   { name: 'Guests', href: '/guests', icon: Users, roles: ['ADMIN', 'FINANCE', 'CLEANER', 'AGENT'] },
   { name: 'Cleanings', href: '/cleanings', icon: Sparkles, roles: ['ADMIN', 'FINANCE', 'CLEANER'] },
   { name: 'Finance', href: '/finance', icon: DollarSign, roles: ['ADMIN', 'FINANCE'] },
@@ -47,7 +49,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+        'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0',
         open ? 'translate-x-0' : '-translate-x-full'
       )}>
         <div className="flex h-full flex-col">

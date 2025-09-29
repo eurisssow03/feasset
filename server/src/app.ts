@@ -127,7 +127,8 @@ import { dbService } from './services/DatabaseService';
 // Dashboard data
 app.get('/api/dashboard', async (req: any, res: any) => {
   try {
-    const data = await dbService.getDashboardData();
+    const period = req.query.period || 'today';
+    const data = await dbService.getDashboardData(period);
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch dashboard data' });
@@ -159,6 +160,34 @@ app.put('/api/units/:id', async (req: any, res: any) => {
     res.json(unit);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update unit' });
+  }
+});
+
+// Locations endpoints
+app.get('/api/locations', async (req: any, res: any) => {
+  try {
+    const locations = await dbService.getAllLocations();
+    res.json(locations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch locations' });
+  }
+});
+
+app.post('/api/locations', async (req: any, res: any) => {
+  try {
+    const location = await dbService.createLocation(req.body);
+    res.json(location);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create location' });
+  }
+});
+
+app.put('/api/locations/:id', async (req: any, res: any) => {
+  try {
+    const location = await dbService.updateLocation(req.params.id, req.body);
+    res.json(location);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update location' });
   }
 });
 

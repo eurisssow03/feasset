@@ -12,6 +12,13 @@ interface Unit {
   address: string;
   active: boolean;
   calendarId?: string;
+  location?: {
+    id: string;
+    name: string;
+    city: string;
+    state: string;
+    country: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -168,25 +175,31 @@ export default function UnitsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        {unit.address}
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        {unit.calendarId ? 'Calendar synced' : 'No calendar sync'}
-                      </div>
-                      <div className="flex items-center">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          unit.active 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          {unit.active ? 'Active' : 'Inactive'}
-                        </span>
-                      </div>
-                    </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 mr-2" />
+                            {unit.address}
+                          </div>
+                          {unit.location && (
+                            <div className="flex items-center text-sm text-gray-600">
+                              <MapPin className="h-4 w-4 mr-2" />
+                              {unit.location.name} - {unit.location.city}, {unit.location.state}
+                            </div>
+                          )}
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            {unit.calendarId ? 'Calendar synced' : 'No calendar sync'}
+                          </div>
+                          <div className="flex items-center">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              unit.active 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {unit.active ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                        </div>
                   </CardContent>
                 </Card>
               ))}

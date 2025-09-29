@@ -35,6 +35,17 @@ export class DatabaseService {
 
   async getAllUnits() {
     return await this.prisma.unit.findMany({
+      include: {
+        location: {
+          select: {
+            id: true,
+            name: true,
+            city: true,
+            state: true,
+            country: true,
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -43,6 +54,26 @@ export class DatabaseService {
     return await this.prisma.unit.update({
       where: { id },
       data: unitData,
+    });
+  }
+
+  // Location Management
+  async createLocation(locationData: any) {
+    return await this.prisma.location.create({
+      data: locationData,
+    });
+  }
+
+  async getAllLocations() {
+    return await this.prisma.location.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateLocation(id: string, locationData: any) {
+    return await this.prisma.location.update({
+      where: { id },
+      data: locationData,
     });
   }
 
@@ -130,20 +161,142 @@ export class DatabaseService {
   }
 
   // Dashboard Data
-  async getDashboardData() {
+  async getDashboardData(period: string = 'today') {
+    const now = new Date();
+    let startDate: Date;
+    let endDate: Date;
+
+    // Calculate date range based on period
+    switch (period) {
+      case 'today':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        break;
+      case 'tomorrow':
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 2);
+        break;
+      case 'thisWeek':
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay());
+        startDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
+        endDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 7);
+        break;
+      case 'nextWeek':
+        const nextWeekStart = new Date(now);
+        nextWeekStart.setDate(now.getDate() - now.getDay() + 7);
+        startDate = new Date(nextWeekStart.getFullYear(), nextWeekStart.getMonth(), nextWeekStart.getDate());
+        endDate = new Date(nextWeekStart.getFullYear(), nextWeekStart.getMonth(), nextWeekStart.getDate() + 7);
+        break;
+      case 'thisMonth':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        break;
+      case 'nextMonth':
+        startDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+        break;
+      case 'next2Months':
+        startDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 3, 1);
+        break;
+      case 'next3Months':
+        startDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 4, 1);
+        break;
+      default:
+        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    }
+
     const [
       totalReservations,
       totalRevenue,
       totalUnits,
       totalGuests,
+      availableUnits,
+      checkedInToday,
+      checkedOutToday,
       recentReservations,
     ] = await Promise.all([
-      this.prisma.reservation.count(),
+      // Total reservations in period
+      this.prisma.reservation.count({
+        where: {
+          OR: [
+            {
+              checkIn: {
+                gte: startDate,
+                lt: endDate,
+              },
+            },
+            {
+              checkOut: {
+                gte: startDate,
+                lt: endDate,
+              },
+            },
+            {
+              AND: [
+                { checkIn: { lte: startDate } },
+                { checkOut: { gte: endDate } },
+              ],
+            },
+          ],
+        },
+      }),
+      // Total revenue in period
       this.prisma.reservation.aggregate({
+        where: {
+          OR: [
+            {
+              checkIn: {
+                gte: startDate,
+                lt: endDate,
+              },
+            },
+            {
+              checkOut: {
+                gte: startDate,
+                lt: endDate,
+              },
+            },
+            {
+              AND: [
+                { checkIn: { lte: startDate } },
+                { checkOut: { gte: endDate } },
+              ],
+            },
+          ],
+        },
         _sum: { totalAmount: true },
       }),
-      this.prisma.unit.count(),
+      // Total units
+      this.prisma.unit.count({
+        where: { active: true },
+      }),
+      // Total guests
       this.prisma.guest.count(),
+      // Available units (not occupied during the period)
+      this.getAvailableUnitsCount(startDate, endDate),
+      // Check-ins today
+      this.prisma.reservation.count({
+        where: {
+          checkIn: {
+            gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+            lt: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+          },
+        },
+      }),
+      // Check-outs today
+      this.prisma.reservation.count({
+        where: {
+          checkOut: {
+            gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+            lt: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1),
+          },
+        },
+      }),
+      // Recent reservations
       this.prisma.reservation.findMany({
         take: 5,
         include: {
@@ -159,8 +312,48 @@ export class DatabaseService {
       totalRevenue: totalRevenue._sum.totalAmount || 0,
       totalUnits,
       totalGuests,
+      availableUnits,
+      checkedInToday,
+      checkedOutToday,
       recentReservations,
     };
+  }
+
+  // Helper method to calculate available units
+  private async getAvailableUnitsCount(startDate: Date, endDate: Date): Promise<number> {
+    const totalUnits = await this.prisma.unit.count({
+      where: { active: true },
+    });
+
+    const occupiedUnits = await this.prisma.reservation.count({
+      where: {
+        status: {
+          in: ['CONFIRMED', 'CHECKED_IN'],
+        },
+        OR: [
+          {
+            checkIn: {
+              gte: startDate,
+              lt: endDate,
+            },
+          },
+          {
+            checkOut: {
+              gte: startDate,
+              lt: endDate,
+            },
+          },
+          {
+            AND: [
+              { checkIn: { lte: startDate } },
+              { checkOut: { gte: endDate } },
+            ],
+          },
+        ],
+      },
+    });
+
+    return Math.max(0, totalUnits - occupiedUnits);
   }
 
   // Google Calendar Integration

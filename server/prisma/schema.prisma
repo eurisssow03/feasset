@@ -62,8 +62,30 @@ model User {
   @@map("users")
 }
 
+model Location {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  state       String
+  country     String
+  postalCode  String
+  phone       String?
+  email       String?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  units Unit[]
+
+  @@map("locations")
+}
+
 model Unit {
   id          String   @id @default(cuid())
+  locationId  String?
   name        String
   code        String   @unique
   address     String?
@@ -73,6 +95,7 @@ model Unit {
   updatedAt   DateTime @updatedAt
 
   // Relations
+  location      Location?     @relation(fields: [locationId], references: [id])
   reservations  Reservation[]
   cleaningTasks CleaningTask[]
 

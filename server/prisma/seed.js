@@ -23,11 +23,49 @@ async function main() {
 
   console.log('✅ Created admin user:', adminUser.email);
 
+  // Create sample locations
+  const location1 = await prisma.location.upsert({
+    where: { name: 'Downtown Apartment Complex' },
+    update: {},
+    create: {
+      name: 'Downtown Apartment Complex',
+      address: '123 Main Street',
+      city: 'New York',
+      state: 'NY',
+      country: 'US',
+      postalCode: '10001',
+      phone: '+1 (555) 123-4567',
+      email: 'downtown@homestay.com',
+      description: 'Modern apartment complex in the heart of downtown',
+      isActive: true,
+    },
+  });
+
+  const location2 = await prisma.location.upsert({
+    where: { name: 'Riverside Villa' },
+    update: {},
+    create: {
+      name: 'Riverside Villa',
+      address: '456 Oak Avenue',
+      city: 'Los Angeles',
+      state: 'CA',
+      country: 'US',
+      postalCode: '90210',
+      phone: '+1 (555) 987-6543',
+      email: 'riverside@homestay.com',
+      description: 'Luxury villa with river views',
+      isActive: true,
+    },
+  });
+
+  console.log('✅ Created sample locations');
+
   // Create sample units
   const unit1 = await prisma.unit.upsert({
     where: { code: 'UNIT-001' },
     update: {},
     create: {
+      locationId: location1.id,
       name: 'Deluxe Room 1',
       code: 'UNIT-001',
       address: '123 Main Street, City Center',
@@ -39,6 +77,7 @@ async function main() {
     where: { code: 'UNIT-002' },
     update: {},
     create: {
+      locationId: location2.id,
       name: 'Standard Room 1',
       code: 'UNIT-002',
       address: '456 Oak Avenue, Downtown',

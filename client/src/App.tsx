@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage';
 import ReservationsPage from './pages/ReservationsPage';
 import ReservationDetailPage from './pages/ReservationDetailPage';
 import UnitsPage from './pages/UnitsPage';
+import LocationPage from './pages/LocationPage';
 import GuestsPage from './pages/GuestsPage';
 import CleaningsPage from './pages/CleaningsPage';
 import FinancePage from './pages/FinancePage';
@@ -47,6 +48,7 @@ function App() {
         <Route path="/reservations" element={<ReservationsPage />} />
         <Route path="/reservations/:id" element={<ReservationDetailPage />} />
         <Route path="/units" element={<UnitsPage />} />
+        <Route path="/locations" element={<LocationPage />} />
         <Route path="/guests" element={<GuestsPage />} />
         <Route path="/cleanings" element={<CleaningsPage />} />
         <Route path="/finance" element={<FinancePage />} />
