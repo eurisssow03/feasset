@@ -76,8 +76,6 @@ export interface DashboardData {
 class HomestayService {
   // Authentication
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
-    // In a real implementation, this would call the server's authentication
-    // For now, we'll simulate the login process
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -85,10 +83,12 @@ class HomestayService {
     });
     
     if (!response.ok) {
-      throw new Error('Login failed');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Login failed');
     }
     
-    return await response.json();
+    const data = await response.json();
+    return { user: data.data.user, token: data.data.accessToken };
   }
 
   async register(userData: Partial<User> & { password: string }): Promise<{ user: User; token: string }> {

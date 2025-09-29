@@ -35,7 +35,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      // For now, set a mock user
+      // For now, we'll skip profile validation and just set a mock user
+      // In production, you'd call api.getProfile(token) here
       setUser({
         id: '1',
         name: 'Homestay Admin',
@@ -51,24 +52,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Login function
   const login = async (email: string, password: string) => {
-    // For now, simulate login
-    if (email === 'admin@homestay.com' && password === 'admin123') {
-      const mockUser = {
-        id: '1',
-        name: 'Homestay Admin',
-        email: 'admin@homestay.com',
-        role: 'ADMIN' as const,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      
-      localStorage.setItem('accessToken', 'mock-jwt-token');
-      localStorage.setItem('refreshToken', 'mock-refresh-token');
-      setUser(mockUser);
+    try {
+      const { user, token } = await api.login(email, password);
+      localStorage.setItem('accessToken', token);
+      localStorage.setItem('refreshToken', token); // Using same token for simplicity
+      setUser(user);
       toast.success('Login successful');
-    } else {
-      throw new Error('Invalid credentials');
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
+      throw error;
     }
   };
 

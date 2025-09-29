@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
+import authRoutes from './routes/auth';
 
 // Load environment variables
 dotenv.config();
@@ -43,6 +44,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.get('/health', (req: any, res: any) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
+
+// Authentication routes
+app.use('/api/auth', authRoutes);
 
 // Data endpoints for the frontend
 import { dbService } from './services/DatabaseService';
