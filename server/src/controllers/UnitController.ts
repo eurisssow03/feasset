@@ -237,10 +237,11 @@ export class UnitController {
 
       // Check if unit has active reservations
       if (existingUnit._count.reservations > 0) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Cannot delete unit with active reservations',
         });
+        return;
       }
 
       // Soft delete by setting active to false

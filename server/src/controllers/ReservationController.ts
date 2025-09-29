@@ -747,6 +747,7 @@ export class ReservationController {
           success: false,
           error: 'Cannot cancel completed reservations',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({

@@ -334,10 +334,11 @@ export class UserController {
         });
 
         if (emailExists) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             error: 'Email already taken',
           });
+          return;
         }
       }
 

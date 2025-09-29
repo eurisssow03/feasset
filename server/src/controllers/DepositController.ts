@@ -378,10 +378,11 @@ export class DepositController {
       }
 
       if (!['HELD', 'PAID'].includes(reservation.depositStatus)) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Deposit must be held or paid to refund',
         });
+        return;
       }
 
       const refundAmount = Number(amount);
@@ -389,10 +390,11 @@ export class DepositController {
       const currentRefundAmount = Number(reservation.depositRefundAmt || 0);
 
       if (refundAmount > (currentDepositAmount - currentRefundAmount)) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Refund amount cannot exceed remaining deposit amount',
         });
+        return;
       }
 
       const newRefundAmount = currentRefundAmount + refundAmount;
@@ -471,20 +473,22 @@ export class DepositController {
       }
 
       if (!['HELD', 'PAID'].includes(reservation.depositStatus)) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Deposit must be held or paid to forfeit',
         });
+        return;
       }
 
       const forfeitAmount = Number(amount);
       const currentDepositAmount = Number(reservation.depositAmount || 0);
 
       if (forfeitAmount > currentDepositAmount) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Forfeit amount cannot exceed deposit amount',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({
@@ -557,10 +561,11 @@ export class DepositController {
       }
 
       if (reservation.depositStatus !== 'PENDING') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only pending deposits can be marked as failed',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({

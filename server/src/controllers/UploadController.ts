@@ -9,17 +9,19 @@ export class UploadController {
       const files = req.files as Express.Multer.File[];
 
       if (!files || files.length === 0) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'No files uploaded',
         });
+        return;
       }
 
       if (files.length > 5) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Maximum 5 photos allowed',
         });
+        return;
       }
 
       const photoUrls = files.map(file => {
@@ -50,17 +52,19 @@ export class UploadController {
       const files = req.files as Express.Multer.File[];
 
       if (!files || files.length === 0) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'No files uploaded',
         });
+        return;
       }
 
       if (files.length > 5) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Maximum 5 files allowed',
         });
+        return;
       }
 
       const fileUrls = files.map(file => {
@@ -91,10 +95,11 @@ export class UploadController {
       const file = req.file;
 
       if (!file) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'No file uploaded',
         });
+        return;
       }
 
       const fileUrl = `/uploads/${file.filename}`;
@@ -125,20 +130,22 @@ export class UploadController {
 
       // Validate filename to prevent directory traversal
       if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Invalid filename',
         });
+        return;
       }
 
       const filePath = path.join(process.cwd(), 'uploads', filename);
 
       // Check if file exists
       if (!fs.existsSync(filePath)) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'File not found',
         });
+        return;
       }
 
       // Get file stats

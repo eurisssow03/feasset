@@ -116,19 +116,21 @@ export class CalendarController {
       });
 
       if (!unit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       // Check if Google Calendar is connected
       const calendarConfig = await prisma.googleCalendar.findFirst();
       if (!calendarConfig) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Google Calendar not connected',
         });
+        return;
       }
 
       // Update unit with calendar ID
@@ -171,19 +173,21 @@ export class CalendarController {
       });
 
       if (!unit || !unit.calendarId) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found or not synced with calendar',
         });
+        return;
       }
 
       // Get calendar configuration
       const calendarConfig = await prisma.googleCalendar.findFirst();
       if (!calendarConfig) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Google Calendar not connected',
         });
+        return;
       }
 
       // Set up OAuth2 client

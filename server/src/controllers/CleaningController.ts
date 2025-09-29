@@ -257,17 +257,19 @@ export class CleaningController {
       });
 
       if (!assignedUser || !assignedUser.isActive) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Assigned user not found or inactive',
         });
+        return;
       }
 
       if (assignedUser.role !== 'CLEANER') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Assigned user must be a cleaner',
         });
+        return;
       }
 
       const updatedCleaning = await prisma.cleaningTask.update({
@@ -339,17 +341,19 @@ export class CleaningController {
       }
 
       if (cleaning.assignedToUserId !== req.user?.id) {
-        return res.status(403).json({
+        res.status(403).json({
           success: false,
           error: 'You can only start tasks assigned to you',
         });
+        return;
       }
 
       if (cleaning.status !== 'ASSIGNED') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only assigned tasks can be started',
         });
+        return;
       }
 
       const updatedCleaning = await prisma.cleaningTask.update({
@@ -420,17 +424,19 @@ export class CleaningController {
       }
 
       if (cleaning.assignedToUserId !== req.user?.id) {
-        return res.status(403).json({
+        res.status(403).json({
           success: false,
           error: 'You can only complete tasks assigned to you',
         });
+        return;
       }
 
       if (cleaning.status !== 'IN_PROGRESS') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only in-progress tasks can be completed',
         });
+        return;
       }
 
       // Create photos if provided
