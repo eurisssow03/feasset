@@ -4,7 +4,7 @@ services:
     name: homestay-backend
     env: node
     plan: starter
-    buildCommand: "cd server && npm ci && npx prisma generate"
+    buildCommand: "cd server && npm install && npx prisma generate"
     startCommand: "cd server && npx prisma migrate deploy && npm start"
     envVars:
       - key: NODE_ENV
