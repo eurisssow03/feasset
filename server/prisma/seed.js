@@ -23,87 +23,87 @@ async function main() {
 
   console.log('✅ Created admin user:', adminUser.email);
 
-  // Create sample locations
-  let location1, location2;
-  
-  try {
-    location1 = await prisma.location.create({
-      data: {
-        name: 'Downtown Apartment Complex',
-        address: '123 Main Street',
-        city: 'New York',
-        state: 'NY',
-        country: 'US',
-        postalCode: '10001',
-        phone: '+1 (555) 123-4567',
-        email: 'downtown@homestay.com',
-        description: 'Modern apartment complex in the heart of downtown',
-        isActive: true,
-      },
-    });
-  } catch (error) {
-    if (error.code === 'P2002') {
-      // Location already exists, find it
-      location1 = await prisma.location.findUnique({
-        where: { name: 'Downtown Apartment Complex' }
-      });
-    } else {
-      throw error;
-    }
-  }
+// Create sample locations
+let location1, location2;
 
-  try {
-    location2 = await prisma.location.create({
-      data: {
-        name: 'Riverside Villa',
-        address: '456 Oak Avenue',
-        city: 'Los Angeles',
-        state: 'CA',
-        country: 'US',
-        postalCode: '90210',
-        phone: '+1 (555) 987-6543',
-        email: 'riverside@homestay.com',
-        description: 'Luxury villa with river views',
-        isActive: true,
-      },
+try {
+  location1 = await prisma.location.create({
+    data: {
+      name: 'Downtown Office',
+      isActive: true,
+    },
+  });
+} catch (error) {
+  if (error.code === 'P2002') {
+    // Location already exists, find it
+    location1 = await prisma.location.findUnique({
+      where: { name: 'Downtown Office' }
     });
-  } catch (error) {
-    if (error.code === 'P2002') {
-      // Location already exists, find it
-      location2 = await prisma.location.findUnique({
-        where: { name: 'Riverside Villa' }
-      });
-    } else {
-      throw error;
-    }
+  } else {
+    throw error;
   }
+}
+
+try {
+  location2 = await prisma.location.create({
+    data: {
+      name: 'Main Building',
+      isActive: true,
+    },
+  });
+} catch (error) {
+  if (error.code === 'P2002') {
+    // Location already exists, find it
+    location2 = await prisma.location.findUnique({
+      where: { name: 'Main Building' }
+    });
+  } else {
+    throw error;
+  }
+}
 
   console.log('✅ Created sample locations');
 
-  // Create sample units
-  const unit1 = await prisma.unit.upsert({
-    where: { code: 'UNIT-001' },
-    update: {},
-    create: {
-      locationId: location1.id,
-      name: 'Deluxe Room 1',
-      code: 'UNIT-001',
-      address: '123 Main Street, City Center',
-      active: true,
-    },
-  });
+// Create sample units
+const unit1 = await prisma.unit.upsert({
+  where: { code: 'UNIT-001' },
+  update: {},
+  create: {
+    locationId: location1.id,
+    name: 'Deluxe Room 1',
+    code: 'UNIT-001',
+    cleaningCost: 50.00,
+    washingMachine: true,
+    airConditioning: true,
+    wifi: true,
+    kitchen: true,
+    parking: true,
+    balcony: true,
+    pool: false,
+    gym: false,
+    active: true,
+  },
+});
 
-  const unit2 = await prisma.unit.upsert({
-    where: { code: 'UNIT-002' },
-    update: {},
-    create: {
-      locationId: location2.id,
-      name: 'Standard Room 1',
-      code: 'UNIT-002',
-      address: '456 Oak Avenue, Downtown',
-      active: true,
-    },
-  });
+const unit2 = await prisma.unit.upsert({
+  where: { code: 'UNIT-002' },
+  update: {},
+  create: {
+    locationId: location2.id,
+    name: 'Standard Room 1',
+    code: 'UNIT-002',
+    cleaningCost: 30.00,
+    washingMachine: false,
+    airConditioning: true,
+    wifi: true,
+    kitchen: false,
+    parking: true,
+    balcony: false,
+    pool: false,
+    gym: false,
+    active: true,
+  },
+});
 
   console.log('✅ Created sample units');
 

@@ -63,19 +63,11 @@ model User {
 }
 
 model Location {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  address     String
-  city        String
-  state       String
-  country     String
-  postalCode  String
-  phone       String?
-  email       String?
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   units Unit[]
@@ -84,15 +76,23 @@ model Location {
 }
 
 model Unit {
-  id          String   @id @default(cuid())
-  locationId  String?
-  name        String
-  code        String   @unique
-  address     String?
-  calendarId  String?
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  locationId    String?
+  name          String
+  code          String   @unique
+  cleaningCost  Decimal? @db.Decimal(10, 2)
+  washingMachine Boolean @default(false)
+  airConditioning Boolean @default(false)
+  wifi          Boolean @default(false)
+  kitchen       Boolean @default(false)
+  parking       Boolean @default(false)
+  balcony       Boolean @default(false)
+  pool          Boolean @default(false)
+  gym           Boolean @default(false)
+  calendarId    String?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Relations
   location      Location?     @relation(fields: [locationId], references: [id])

@@ -21,5 +21,8 @@ RUN mkdir -p uploads
 # Expose port
 EXPOSE 8080
 
+# Create startup script
+RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnpm start' > start.sh && chmod +x start.sh
+
 # Start the application
-CMD ["npm", "start"]
+CMD ["./start.sh"]

@@ -9,15 +9,21 @@ interface Unit {
   id: string;
   name: string;
   code: string;
-  address: string;
+  locationId?: string;
+  cleaningCost?: number;
+  washingMachine: boolean;
+  airConditioning: boolean;
+  wifi: boolean;
+  kitchen: boolean;
+  parking: boolean;
+  balcony: boolean;
+  pool: boolean;
+  gym: boolean;
   active: boolean;
   calendarId?: string;
   location?: {
     id: string;
     name: string;
-    city: string;
-    state: string;
-    country: string;
   };
   createdAt: string;
   updatedAt: string;
@@ -35,6 +41,16 @@ export default function UnitsPage() {
     queryFn: async () => {
       const response = await fetch('/api/units');
       if (!response.ok) throw new Error('Failed to fetch units');
+      return response.json();
+    },
+  });
+
+  // Fetch locations
+  const { data: locations = [] } = useQuery({
+    queryKey: ['locations'],
+    queryFn: async () => {
+      const response = await fetch('/api/locations');
+      if (!response.ok) throw new Error('Failed to fetch locations');
       return response.json();
     },
   });
@@ -176,21 +192,29 @@ export default function UnitsPage() {
                   </CardHeader>
                   <CardContent>
                         <div className="space-y-2">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <MapPin className="h-4 w-4 mr-2" />
-                            {unit.address}
-                          </div>
                           {unit.location && (
                             <div className="flex items-center text-sm text-gray-600">
                               <MapPin className="h-4 w-4 mr-2" />
-                              {unit.location.name} - {unit.location.city}, {unit.location.state}
+                              {unit.location.name}
                             </div>
                           )}
-                          <div className="flex items-center text-sm text-gray-600">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            {unit.calendarId ? 'Calendar synced' : 'No calendar sync'}
+                          {unit.cleaningCost && (
+                            <div className="flex items-center text-sm text-gray-600">
+                              <Calendar className="h-4 w-4 mr-2" />
+                              Cleaning: ${Number(unit.cleaningCost).toFixed(2)}
+                            </div>
+                          )}
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {unit.washingMachine && <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Washing Machine</span>}
+                            {unit.airConditioning && <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">AC</span>}
+                            {unit.wifi && <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">WiFi</span>}
+                            {unit.kitchen && <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded">Kitchen</span>}
+                            {unit.parking && <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">Parking</span>}
+                            {unit.balcony && <span className="px-2 py-1 bg-teal-100 text-teal-800 text-xs rounded">Balcony</span>}
+                            {unit.pool && <span className="px-2 py-1 bg-cyan-100 text-cyan-800 text-xs rounded">Pool</span>}
+                            {unit.gym && <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded">Gym</span>}
                           </div>
-                          <div className="flex items-center">
+                          <div className="flex items-center justify-between mt-2">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                               unit.active 
                                 ? 'bg-green-100 text-green-800' 
@@ -198,6 +222,9 @@ export default function UnitsPage() {
                             }`}>
                               {unit.active ? 'Active' : 'Inactive'}
                             </span>
+                            {unit.calendarId && (
+                              <span className="text-xs text-gray-500">Calendar synced</span>
+                            )}
                           </div>
                         </div>
                   </CardContent>
@@ -218,14 +245,15 @@ export default function UnitsPage() {
       )}
 
       {/* Edit Unit Modal */}
-      {editingUnit && (
-        <EditUnitModal
-          unit={editingUnit}
-          onClose={() => setEditingUnit(null)}
-          onSave={handleUpdateUnit}
-          isLoading={updateUnitMutation.isPending}
-        />
-      )}
+        {editingUnit && (
+          <EditUnitModal
+            unit={editingUnit}
+            onClose={() => setEditingUnit(null)}
+            onSave={handleUpdateUnit}
+            isLoading={updateUnitMutation.isPending}
+            locations={locations}
+          />
+        )}
     </div>
   );
 }
@@ -239,7 +267,16 @@ function AddUnitModal({ onClose, onSave, isLoading }: {
   const [formData, setFormData] = useState({
     name: '',
     code: '',
-    address: '',
+    locationId: '',
+    cleaningCost: 0,
+    washingMachine: false,
+    airConditioning: false,
+    wifi: false,
+    kitchen: false,
+    parking: false,
+    balcony: false,
+    pool: false,
+    gym: false,
     active: true,
   });
 
@@ -256,56 +293,104 @@ function AddUnitModal({ onClose, onSave, isLoading }: {
           <CardDescription>Create a new homestay unit</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="label">Unit Name</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
-                className="input w-full"
-                required
-              />
-            </div>
-            <div>
-              <label className="label">Unit Code</label>
-              <input
-                type="text"
-                value={formData.code}
-                onChange={(e: any) => setFormData({ ...formData, code: e.target.value })}
-                className="input w-full"
-                required
-              />
-            </div>
-            <div>
-              <label className="label">Address</label>
-              <textarea
-                value={formData.address}
-                onChange={(e: any) => setFormData({ ...formData, address: e.target.value })}
-                className="input w-full"
-                rows={3}
-                required
-              />
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="active"
-                checked={formData.active}
-                onChange={(e: any) => setFormData({ ...formData, active: e.target.checked })}
-                className="mr-2"
-              />
-              <label htmlFor="active" className="text-sm">Active</label>
-            </div>
-            <div className="flex gap-2 pt-4">
-              <Button type="submit" disabled={isLoading} className="flex-1">
-                {isLoading ? 'Creating...' : 'Create Unit'}
-              </Button>
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1">
-                Cancel
-              </Button>
-            </div>
-          </form>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Unit Name</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
+                    className="input w-full"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="label">Unit Code</label>
+                  <input
+                    type="text"
+                    value={formData.code}
+                    onChange={(e: any) => setFormData({ ...formData, code: e.target.value })}
+                    className="input w-full"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="label">Location</label>
+                <select
+                  value={formData.locationId}
+                  onChange={(e: any) => setFormData({ ...formData, locationId: e.target.value })}
+                  className="input w-full"
+                >
+                  <option value="">Select Location</option>
+                  {locations.map((location: any) => (
+                    <option key={location.id} value={location.id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="label">Cleaning Cost ($)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.cleaningCost}
+                  onChange={(e: any) => setFormData({ ...formData, cleaningCost: parseFloat(e.target.value) || 0 })}
+                  className="input w-full"
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div>
+                <label className="label">Room Facilities</label>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {[
+                    { key: 'washingMachine', label: 'Washing Machine' },
+                    { key: 'airConditioning', label: 'Air Conditioning' },
+                    { key: 'wifi', label: 'WiFi' },
+                    { key: 'kitchen', label: 'Kitchen' },
+                    { key: 'parking', label: 'Parking' },
+                    { key: 'balcony', label: 'Balcony' },
+                    { key: 'pool', label: 'Pool' },
+                    { key: 'gym', label: 'Gym' },
+                  ].map((facility) => (
+                    <label key={facility.key} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={formData[facility.key as keyof typeof formData] as boolean}
+                        onChange={(e: any) => setFormData({ ...formData, [facility.key]: e.target.checked })}
+                        className="mr-2"
+                      />
+                      <span className="text-sm">{facility.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="active"
+                  checked={formData.active}
+                  onChange={(e: any) => setFormData({ ...formData, active: e.target.checked })}
+                  className="mr-2"
+                />
+                <label htmlFor="active" className="text-sm">Active</label>
+              </div>
+              
+              <div className="flex gap-2 pt-4">
+                <Button type="submit" disabled={isLoading} className="flex-1">
+                  {isLoading ? 'Creating...' : 'Create Unit'}
+                </Button>
+                <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+                  Cancel
+                </Button>
+              </div>
+            </form>
         </CardContent>
       </Card>
     </div>
@@ -313,16 +398,26 @@ function AddUnitModal({ onClose, onSave, isLoading }: {
 }
 
 // Edit Unit Modal Component
-function EditUnitModal({ unit, onClose, onSave, isLoading }: {
+function EditUnitModal({ unit, onClose, onSave, isLoading, locations }: {
   unit: Unit;
   onClose: () => void;
   onSave: (id: string, data: Partial<Unit>) => void;
   isLoading: boolean;
+  locations: any[];
 }) {
   const [formData, setFormData] = useState({
     name: unit.name,
     code: unit.code,
-    address: unit.address,
+    locationId: unit.locationId || '',
+    cleaningCost: unit.cleaningCost || 0,
+    washingMachine: unit.washingMachine,
+    airConditioning: unit.airConditioning,
+    wifi: unit.wifi,
+    kitchen: unit.kitchen,
+    parking: unit.parking,
+    balcony: unit.balcony,
+    pool: unit.pool,
+    gym: unit.gym,
     active: unit.active,
   });
 
@@ -333,43 +428,90 @@ function EditUnitModal({ unit, onClose, onSave, isLoading }: {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <CardTitle>Edit Unit</CardTitle>
           <CardDescription>Update unit information</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="label">Unit Name</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
+                  className="input w-full"
+                  required
+                />
+              </div>
+              <div>
+                <label className="label">Unit Code</label>
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e: any) => setFormData({ ...formData, code: e.target.value })}
+                  className="input w-full"
+                  required
+                />
+              </div>
+            </div>
+            
             <div>
-              <label className="label">Unit Name</label>
+              <label className="label">Location</label>
+              <select
+                value={formData.locationId}
+                onChange={(e: any) => setFormData({ ...formData, locationId: e.target.value })}
+                className="input w-full"
+              >
+                <option value="">Select Location</option>
+                {locations.map((location: any) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="label">Cleaning Cost ($)</label>
               <input
-                type="text"
-                value={formData.name}
-                onChange={(e: any) => setFormData({ ...formData, name: e.target.value })}
+                type="number"
+                step="0.01"
+                value={formData.cleaningCost}
+                onChange={(e: any) => setFormData({ ...formData, cleaningCost: parseFloat(e.target.value) || 0 })}
                 className="input w-full"
-                required
+                placeholder="0.00"
               />
             </div>
+
             <div>
-              <label className="label">Unit Code</label>
-              <input
-                type="text"
-                value={formData.code}
-                onChange={(e: any) => setFormData({ ...formData, code: e.target.value })}
-                className="input w-full"
-                required
-              />
+              <label className="label">Room Facilities</label>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {[
+                  { key: 'washingMachine', label: 'Washing Machine' },
+                  { key: 'airConditioning', label: 'Air Conditioning' },
+                  { key: 'wifi', label: 'WiFi' },
+                  { key: 'kitchen', label: 'Kitchen' },
+                  { key: 'parking', label: 'Parking' },
+                  { key: 'balcony', label: 'Balcony' },
+                  { key: 'pool', label: 'Pool' },
+                  { key: 'gym', label: 'Gym' },
+                ].map((facility) => (
+                  <label key={facility.key} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData[facility.key as keyof typeof formData] as boolean}
+                      onChange={(e: any) => setFormData({ ...formData, [facility.key]: e.target.checked })}
+                      className="mr-2"
+                    />
+                    <span className="text-sm">{facility.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-            <div>
-              <label className="label">Address</label>
-              <textarea
-                value={formData.address}
-                onChange={(e: any) => setFormData({ ...formData, address: e.target.value })}
-                className="input w-full"
-                rows={3}
-                required
-              />
-            </div>
+
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -380,6 +522,7 @@ function EditUnitModal({ unit, onClose, onSave, isLoading }: {
               />
               <label htmlFor="active" className="text-sm">Active</label>
             </div>
+            
             <div className="flex gap-2 pt-4">
               <Button type="submit" disabled={isLoading} className="flex-1">
                 {isLoading ? 'Updating...' : 'Update Unit'}
