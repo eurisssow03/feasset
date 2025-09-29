@@ -60,7 +60,17 @@ declare module 'express' {
   export function json(options?: any): any;
   export function urlencoded(options?: any): any;
   export function static(root: string): any;
-  export default function (): Application;
+  
+  interface ExpressFunction {
+    (): Application;
+    json(options?: any): any;
+    urlencoded(options?: any): any;
+    static(root: string): any;
+    Router(): Router;
+  }
+  
+  const express: ExpressFunction;
+  export default express;
   
   export namespace Express {
     interface Request {
@@ -106,75 +116,5 @@ declare module 'express' {
 declare var process: any;
 declare var console: any;
 
-// Jest globals
-declare var jest: any;
-declare var describe: any;
-declare var it: any;
-declare var expect: any;
-declare var beforeEach: any;
-declare var afterEach: any;
-declare var beforeAll: any;
-declare var afterAll: any;
-declare var test: any;
-
-// Express namespace
-declare namespace Express {
-  interface Request {
-    user?: any;
-    params: any;
-    query: any;
-    body: any;
-    headers: any;
-    files?: any[];
-    file?: any;
-    originalUrl?: string;
-  }
-  
-  interface Response {
-    status(code: number): Response;
-    json(obj: any): Response;
-    send(data: any): Response;
-    setHeader(name: string, value: string): void;
-    end(data?: any): void;
-  }
-  
-  interface NextFunction {
-    (err?: any): void;
-  }
-  
-  namespace Multer {
-    interface File {
-      fieldname: string;
-      originalname: string;
-      encoding: string;
-      mimetype: string;
-      size: number;
-      destination: string;
-      filename: string;
-      path: string;
-      buffer: Buffer;
-    }
-  }
-}
-
-// Global interfaces
-declare global {
-  interface Request {
-    user?: any;
-    params: any;
-    query: any;
-    body: any;
-    headers: any;
-    files?: any[];
-    file?: any;
-    originalUrl?: string;
-  }
-  
-  interface Response {
-    status(code: number): Response;
-    json(obj: any): Response;
-    send(data: any): Response;
-    setHeader(name: string, value: string): void;
-    end(data?: any): void;
-  }
-}
+// Export to make this file a module
+export {};

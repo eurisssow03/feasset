@@ -112,7 +112,7 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-export const swaggerSetup = (app: Express) => {
+export const swaggerSetup = (app: any) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
     explorer: true,
     customCss: '.swagger-ui .topbar { display: none }',
