@@ -15,7 +15,7 @@ import UsersPage from './pages/UsersPage';
 import SettingsPage from './pages/SettingsPage';
 
 // Layout
-import AppLayout from './components/layout/AppLayout';
+import { AppLayout } from './components/layout/AppLayout';
 
 function App() {
   const { user, isLoading } = useAuth();
