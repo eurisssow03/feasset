@@ -8,10 +8,7 @@ services:
       cd server
       npm install
       npx prisma generate
-    startCommand: |
-      cd server
-      npx prisma db push --accept-data-loss
-      npm start
+    startCommand: "cd server && npx prisma db push --accept-data-loss && npm start"
     envVars:
       - key: NODE_ENV
         value: production
