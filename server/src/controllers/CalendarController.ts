@@ -246,13 +246,14 @@ export class CalendarController {
       const calendarConfig = await prisma.googleCalendar.findFirst();
 
       if (!calendarConfig) {
-        return res.json({
+        res.json({
           success: true,
           data: {
             connected: false,
             message: 'Google Calendar not connected',
           },
         });
+        return;
       }
 
       // Check if token is expired
