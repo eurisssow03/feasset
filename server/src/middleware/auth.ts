@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-import { Role, AuthRequest } from '../types';
+import { Role, AuthRequest } from '../types/index';
 
 export { AuthRequest };
 

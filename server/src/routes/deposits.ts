@@ -3,7 +3,7 @@ import { DepositController } from '../controllers/DepositController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '../types';
+import { Role } from '../types/index';
 
 const router = Router();
 const depositController = new DepositController();

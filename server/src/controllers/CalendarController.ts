@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { google } from 'googleapis';
-import { AuthRequest } from '../types';
+import { AuthRequest } from '../types/index';
 
 const prisma = new PrismaClient();
 

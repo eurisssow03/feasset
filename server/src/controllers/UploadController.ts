@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthRequest } from '../types';
+import { AuthRequest } from '../types/index';
 import path from 'path';
 import fs from 'fs';
 

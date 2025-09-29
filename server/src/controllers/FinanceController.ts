@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { CleaningStatus } from '../types';
+import { CleaningStatus } from '../types/index';
 
 const prisma = new PrismaClient();
 

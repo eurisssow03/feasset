@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { DepositStatus, AuthRequest } from '../types';
+import { DepositStatus, AuthRequest } from '../types/index';
 
 const prisma = new PrismaClient();
 

@@ -3,7 +3,7 @@ import { UserController } from '../controllers/UserController';
 import { authenticate, authorize } from '../middleware/auth';
 import { validate, validateQuery, validateParams } from '../middleware/validation';
 import Joi from 'joi';
-import { Role } from '../types';
+import { Role } from '../types/index';
 
 const router = Router();
 const userController = new UserController();
