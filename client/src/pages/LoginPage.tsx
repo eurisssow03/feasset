@@ -25,12 +25,15 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  // Add debugging for form state
+  // Watch form values for debugging
+  const watchedValues = watch();
   console.log('📋 Form state:', { errors, isSubmitting });
+  console.log('📝 Form values:', watchedValues);
 
   const onSubmit = async (data: LoginFormData) => {
     console.log('📝 Form submitted with data:', { email: data.email, password: '***' });
@@ -75,6 +78,9 @@ export default function LoginPage() {
                 autoComplete="email"
                 error={errors.email?.message}
                 placeholder="Enter your email"
+                onChange={(e) => {
+                  console.log('📧 Email changed:', e.target.value);
+                }}
               />
 
               <div className="relative">
@@ -85,6 +91,9 @@ export default function LoginPage() {
                   autoComplete="current-password"
                   error={errors.password?.message}
                   placeholder="Enter your password"
+                  onChange={(e) => {
+                    console.log('🔒 Password changed:', e.target.value ? '***' : '');
+                  }}
                 />
                 <button
                   type="button"
