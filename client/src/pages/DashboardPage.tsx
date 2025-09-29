@@ -13,21 +13,19 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { formatCurrency } from '../lib/utils';
 
 interface DashboardStats {
-  today: {
-    arrivals: number;
-    departures: number;
-    occupancyRate: number;
-    overdueTasks: number;
-  };
-  monthly: {
-    revenue: number;
-    deposits: {
-      total: number;
-      refunded: number;
-      forfeited: number;
-      count: number;
-    };
-  };
+  totalReservations: number;
+  totalRevenue: number;
+  totalUnits: number;
+  totalGuests: number;
+  recentReservations: Array<{
+    id: string;
+    guest: { fullName: string };
+    unit: { name: string };
+    checkIn: string;
+    checkOut: string;
+    totalAmount: number;
+    status: string;
+  }>;
 }
 
 export default function DashboardPage() {
@@ -48,32 +46,32 @@ export default function DashboardPage() {
 
   const statCards = [
     {
-      title: 'Today\'s Arrivals',
-      value: stats?.today.arrivals || 0,
+      title: 'Total Reservations',
+      value: stats?.totalReservations || 0,
       icon: Calendar,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
     },
     {
-      title: 'Today\'s Departures',
-      value: stats?.today.departures || 0,
+      title: 'Total Guests',
+      value: stats?.totalGuests || 0,
       icon: Users,
       color: 'text-green-600',
       bgColor: 'bg-green-100',
     },
     {
-      title: 'Occupancy Rate',
-      value: `${stats?.today.occupancyRate || 0}%`,
+      title: 'Total Units',
+      value: stats?.totalUnits || 0,
       icon: Building,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
     },
     {
-      title: 'Overdue Tasks',
-      value: stats?.today.overdueTasks || 0,
-      icon: AlertCircle,
-      color: 'text-red-600',
-      bgColor: 'bg-red-100',
+      title: 'Total Revenue',
+      value: formatCurrency(stats?.totalRevenue || 0),
+      icon: TrendingUp,
+      color: 'text-green-600',
+      bgColor: 'bg-green-100',
     },
   ];
 
@@ -118,7 +116,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">
-              {formatCurrency(stats?.monthly.revenue || 0)}
+              {formatCurrency(stats?.totalRevenue || 0)}
             </div>
             <p className="text-sm text-gray-600 mt-2">
               Total revenue from completed reservations
@@ -130,39 +128,28 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Sparkles className="h-5 w-5 mr-2" />
-              Deposit Summary
+              Recent Reservations
             </CardTitle>
-            <CardDescription>Deposit activity for the current month</CardDescription>
+            <CardDescription>Latest booking activity</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Total Deposits</span>
-                <span className="font-semibold text-gray-900">
-                  {formatCurrency(stats?.monthly.deposits.total || 0)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Refunded</span>
-                <span className="font-semibold text-green-600">
-                  {formatCurrency(stats?.monthly.deposits.refunded || 0)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Forfeited</span>
-                <span className="font-semibold text-red-600">
-                  {formatCurrency(stats?.monthly.deposits.forfeited || 0)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-sm font-medium text-gray-900">Net Deposits</span>
-                <span className="font-bold text-gray-900">
-                  {formatCurrency(
-                    (stats?.monthly.deposits.total || 0) - 
-                    (stats?.monthly.deposits.refunded || 0)
-                  )}
-                </span>
-              </div>
+              {stats?.recentReservations?.length ? (
+                stats.recentReservations.map((reservation) => (
+                  <div key={reservation.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">{reservation.guest.fullName}</p>
+                      <p className="text-sm text-gray-600">{reservation.unit.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-gray-900">{formatCurrency(reservation.totalAmount)}</p>
+                      <p className="text-sm text-gray-600">{reservation.status}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center py-4">No recent reservations</p>
+              )}
             </div>
           </CardContent>
         </Card>
