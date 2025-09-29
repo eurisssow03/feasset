@@ -27,7 +27,7 @@ import { swaggerSetup } from './config/swagger';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = parseInt(process.env.PORT || '8080', 10);
 
 // Initialize Prisma Client
 export const prisma = new PrismaClient();

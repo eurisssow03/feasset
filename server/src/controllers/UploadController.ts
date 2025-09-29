@@ -153,12 +153,17 @@ export class UploadController {
 
       // Set appropriate headers
       res.setHeader('Content-Type', this.getMimeType(filename));
-      res.setHeader('Content-Length', stats.size);
+      res.setHeader('Content-Length', stats.size.toString());
       res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
 
       // Stream the file
       const fileStream = fs.createReadStream(filePath);
-      fileStream.pipe(res);
+      fileStream.on('data', (chunk) => res.write(chunk));
+      fileStream.on('end', () => res.end());
+      fileStream.on('error', (err) => {
+        console.error('File stream error:', err);
+        res.status(500).json({ message: 'Error streaming file' });
+      });
     } catch (error) {
       console.error('Get file error:', error);
       res.status(500).json({

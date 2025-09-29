@@ -4,27 +4,7 @@ export type ReservationStatus = 'DRAFT' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_
 export type DepositStatus = 'NOT_REQUIRED' | 'PENDING' | 'HELD' | 'PAID' | 'PARTIALLY_REFUNDED' | 'REFUNDED' | 'FORFEITED' | 'FAILED';
 export type CleaningStatus = 'PENDING' | 'ASSIGNED' | 'IN_PROGRESS' | 'DONE' | 'FAILED';
 
-// Node.js Buffer type declaration
-declare global {
-  interface Buffer {
-    length: number;
-    toString(encoding?: string): string;
-    [index: number]: number;
-  }
-  var Buffer: {
-    new (size: number): Buffer;
-    new (array: number[]): Buffer;
-    new (arrayBuffer: ArrayBuffer): Buffer;
-    new (str: string, encoding?: string): Buffer;
-    from(str: string, encoding?: string): Buffer;
-    from(array: number[]): Buffer;
-    from(arrayBuffer: ArrayBuffer): Buffer;
-    isBuffer(obj: any): obj is Buffer;
-    concat(list: Buffer[], totalLength?: number): Buffer;
-    alloc(size: number, fill?: string | number | Buffer): Buffer;
-    allocUnsafe(size: number): Buffer;
-  };
-}
+// Node.js Buffer is already available globally
 
 // Express namespace declaration
 declare namespace Express {
