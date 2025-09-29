@@ -89,7 +89,6 @@ export class UnitController {
         data: {
           name,
           code,
-          address,
           active,
         },
         include: {

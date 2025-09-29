@@ -67,7 +67,12 @@ export class CleaningController {
                 id: true,
                 name: true,
                 code: true,
-                address: true,
+                location: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
               },
             },
             assignedTo: {
@@ -145,7 +150,12 @@ export class CleaningController {
                 id: true,
                 name: true,
                 code: true,
-                address: true,
+                location: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
               },
             },
             photos: true,

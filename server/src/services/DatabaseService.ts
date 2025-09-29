@@ -40,9 +40,6 @@ export class DatabaseService {
           select: {
             id: true,
             name: true,
-            city: true,
-            state: true,
-            country: true,
           },
         },
       },
