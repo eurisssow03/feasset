@@ -1,7 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../lib/api';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 export interface User {
   id: string;
@@ -10,6 +9,7 @@ export interface User {
   role: 'ADMIN' | 'FINANCE' | 'CLEANER' | 'AGENT';
   isActive: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 interface AuthContextType {
@@ -17,21 +17,13 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  refreshToken: () => Promise<void>;
+  register: (userData: Partial<User> & { password: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
-
 interface AuthProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
@@ -39,136 +31,73 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const queryClient = useQueryClient();
 
-  // Get current user
-  const { data: userData, isLoading: userLoading } = useQuery({
-    queryKey: ['auth', 'me'],
-    queryFn: async () => {
-      const response = await api.get('/auth/me');
-      return response.data.data;
-    },
-    retry: false,
-    enabled: !!localStorage.getItem('accessToken'),
-  });
-
-  // Login mutation
-  const loginMutation = useMutation({
-    mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const response = await api.post('/auth/login', { email, password });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      localStorage.setItem('accessToken', data.data.accessToken);
-      localStorage.setItem('refreshToken', data.data.refreshToken);
-      setUser(data.data.user);
-      queryClient.setQueryData(['auth', 'me'], data.data.user);
-      toast.success('Login successful');
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.error || 'Login failed');
-    },
-  });
-
-  // Logout mutation
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      await api.post('/auth/logout');
-    },
-    onSuccess: () => {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      setUser(null);
-      queryClient.clear();
-      toast.success('Logged out successfully');
-    },
-    onError: () => {
-      // Even if logout fails on server, clear local state
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      setUser(null);
-      queryClient.clear();
-    },
-  });
-
-  // Refresh token mutation
-  const refreshMutation = useMutation({
-    mutationFn: async () => {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (!refreshToken) throw new Error('No refresh token');
-      
-      const response = await api.post('/auth/refresh', { refreshToken });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      localStorage.setItem('accessToken', data.data.accessToken);
-      // Update the token in axios defaults
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.data.accessToken}`;
-    },
-    onError: () => {
-      // Refresh failed, logout user
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      setUser(null);
-      queryClient.clear();
-    },
-  });
-
-  // Set up axios interceptor for token refresh
-  useEffect(() => {
-    const interceptor = api.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-        
-        if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          
-          try {
-            await refreshMutation.mutateAsync();
-            // Retry the original request
-            return api(originalRequest);
-          } catch (refreshError) {
-            // Refresh failed, redirect to login
-            setUser(null);
-            queryClient.clear();
-            return Promise.reject(refreshError);
-          }
-        }
-        
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      api.interceptors.response.eject(interceptor);
-    };
-  }, [refreshMutation, queryClient]);
-
-  // Set up axios interceptor for adding auth header
+  // Check for existing session on mount
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // For now, set a mock user
+      setUser({
+        id: '1',
+        name: 'Test Admin',
+        email: 'admin@test.com',
+        role: 'ADMIN',
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
     }
+    setIsLoading(false);
   }, []);
 
-  // Update user state when userData changes
-  useEffect(() => {
-    if (userData) {
-      setUser(userData);
-    }
-    setIsLoading(userLoading);
-  }, [userData, userLoading]);
-
+  // Login function
   const login = async (email: string, password: string) => {
-    await loginMutation.mutateAsync({ email, password });
+    // For now, simulate login
+    if (email === 'admin@test.com' && password === 'password123') {
+      const mockUser = {
+        id: '1',
+        name: 'Test Admin',
+        email: 'admin@test.com',
+        role: 'ADMIN' as const,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      
+      localStorage.setItem('accessToken', 'mock-jwt-token');
+      localStorage.setItem('refreshToken', 'mock-refresh-token');
+      setUser(mockUser);
+      toast.success('Login successful');
+    } else {
+      throw new Error('Invalid credentials');
+    }
   };
 
+  // Logout function
   const logout = () => {
-    logoutMutation.mutate();
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setUser(null);
+    queryClient.clear();
+    toast.success('Logged out successfully');
   };
 
-  const refreshToken = async () => {
-    await refreshMutation.mutateAsync();
+  // Register function
+  const register = async (userData: Partial<User> & { password: string }) => {
+    // For now, simulate registration
+    const mockUser = {
+      id: '1',
+      name: userData.name || 'New User',
+      email: userData.email || 'user@example.com',
+      role: userData.role || 'AGENT',
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    localStorage.setItem('accessToken', 'mock-jwt-token');
+    localStorage.setItem('refreshToken', 'mock-refresh-token');
+    setUser(mockUser);
+    toast.success('Registration successful');
   };
 
   const value = {
@@ -176,12 +105,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isLoading,
     login,
     logout,
-    refreshToken,
+    register,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

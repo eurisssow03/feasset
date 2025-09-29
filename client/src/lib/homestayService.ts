@@ -74,8 +74,6 @@ export interface DashboardData {
 }
 
 class HomestayService {
-  private baseUrl = '';
-
   // Authentication
   async login(email: string, password: string): Promise<{ user: User; token: string }> {
     // In a real implementation, this would call the server's authentication
