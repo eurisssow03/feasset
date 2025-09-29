@@ -76,35 +76,46 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <Input
-                {...register('email')}
-                label="Email address"
-                type="email"
-                autoComplete="email"
-                error={errors.email?.message}
-                placeholder="Enter your email"
-              />
-
-              <div className="relative">
-                <Input
-                  {...register('password')}
-                  label="Password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  error={errors.password?.message}
-                  placeholder="Enter your password"
+              {/* Test with basic HTML input */}
+              <div className="space-y-2">
+                <label className="label">Email address (Test)</label>
+                <input
+                  {...register('email')}
+                  type="email"
+                  autoComplete="email"
+                  placeholder="Enter your email"
+                  className="input w-full"
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
+                {errors.email && (
+                  <p className="text-sm text-red-600">{errors.email.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="label">Password (Test)</label>
+                <div className="relative">
+                  <input
+                    {...register('password')}
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="Enter your password"
+                    className="input w-full pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-600">{errors.password.message}</p>
+                )}
               </div>
 
               <Button
