@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Plus, Search, Filter, Edit, Trash2, User, Mail, Shield, Calendar } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, User, Mail, Calendar } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 
@@ -107,8 +107,8 @@ export default function UsersPage() {
                     <div>
                       <div className="flex items-center space-x-2">
                         <h3 className="font-medium text-gray-900">{user.name}</h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${roleColors[user.role]}`}>
-                          <span className="mr-1">{roleIcons[user.role]}</span>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${roleColors[user.role as keyof typeof roleColors]}`}>
+                          <span className="mr-1">{roleIcons[user.role as keyof typeof roleIcons]}</span>
                           {user.role}
                         </span>
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
