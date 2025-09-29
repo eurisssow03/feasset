@@ -52,7 +52,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Login function
   const login = async (email: string, password: string) => {
+    console.log('🔐 Login attempt:', { email, password: '***' });
+    
     try {
+      console.log('📡 Making request to /api/auth/login');
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -61,19 +64,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log('📊 Response status:', response.status);
+      console.log('📊 Response headers:', Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Login failed');
+        console.error('❌ Login error response:', errorData);
+        throw new Error(errorData.error || `Login failed with status ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('✅ Login success data:', data);
+      
       const { user, accessToken } = data.data;
       
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', accessToken);
       setUser(user);
       toast.success('Login successful');
+      console.log('🎉 User logged in successfully:', user);
     } catch (error: any) {
+      console.error('💥 Login error:', error);
       toast.error(error.message || 'Login failed');
       throw error;
     }

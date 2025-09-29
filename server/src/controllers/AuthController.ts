@@ -38,6 +38,7 @@ export class AuthController {
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
+      console.log('🔐 Server: Login attempt for email:', email);
 
       // Find user by email
       const user = await prisma.user.findUnique({
@@ -52,7 +53,13 @@ export class AuthController {
         },
       });
 
+      console.log('👤 Server: User found:', user ? 'Yes' : 'No');
+      if (user) {
+        console.log('👤 Server: User details:', { id: user.id, email: user.email, isActive: user.isActive });
+      }
+
       if (!user || !user.isActive) {
+        console.log('❌ Server: User not found or inactive');
         res.status(401).json({
           success: false,
           error: 'Invalid credentials',
@@ -61,8 +68,12 @@ export class AuthController {
       }
 
       // Check password
+      console.log('🔑 Server: Checking password...');
       const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+      console.log('🔑 Server: Password valid:', isPasswordValid);
+
       if (!isPasswordValid) {
+        console.log('❌ Server: Invalid password');
         res.status(401).json({
           success: false,
           error: 'Invalid credentials',
@@ -71,12 +82,14 @@ export class AuthController {
       }
 
       // Generate tokens
+      console.log('🎫 Server: Generating tokens...');
       const accessToken = this.generateAccessToken(user.id);
       const refreshToken = this.generateRefreshToken(user.id);
 
       // Remove password from response
       const { passwordHash, ...userWithoutPassword } = user;
 
+      console.log('✅ Server: Login successful for user:', user.email);
       res.json({
         success: true,
         data: {
@@ -86,7 +99,7 @@ export class AuthController {
         },
       });
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('💥 Server: Login error:', error);
       res.status(500).json({
         success: false,
         error: 'Internal server error',

@@ -45,6 +45,37 @@ app.get('/health', (req: any, res: any) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Debug endpoint to check database connection and user data
+app.get('/api/debug/users', async (req: any, res: any) => {
+  try {
+    console.log('🔍 Debug: Checking database connection...');
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
+    console.log('👥 Debug: Found users:', users);
+    res.json({ 
+      success: true, 
+      count: users.length, 
+      users: users,
+      message: 'Database connection successful'
+    });
+  } catch (error) {
+    console.error('💥 Debug: Database error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Database connection failed',
+      details: error.message 
+    });
+  }
+});
+
 // Authentication routes
 app.use('/api/auth', authRoutes);
 
