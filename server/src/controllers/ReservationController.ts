@@ -239,7 +239,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -400,7 +405,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -516,7 +526,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -578,7 +593,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -702,7 +722,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
@@ -775,7 +800,12 @@ export class ReservationController {
               id: true,
               name: true,
               code: true,
-              address: true,
+              location: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
         },
