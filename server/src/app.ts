@@ -12,6 +12,12 @@ import authRoutes from './routes/auth';
 // Load environment variables
 dotenv.config();
 
+// Check critical environment variables
+console.log('🔧 Environment check:');
+console.log('🔑 JWT_SECRET exists:', !!process.env.JWT_SECRET);
+console.log('🔑 JWT_REFRESH_SECRET exists:', !!process.env.JWT_REFRESH_SECRET);
+console.log('🗄️ DATABASE_URL exists:', !!process.env.DATABASE_URL);
+
 const app = express();
 const PORT = parseInt(process.env.PORT || '3000', 10);
 

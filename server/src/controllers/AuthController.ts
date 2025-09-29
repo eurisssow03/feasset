@@ -86,8 +86,8 @@ export class AuthController {
       console.log('🔑 Server: JWT_SECRET exists:', !!process.env.JWT_SECRET);
       console.log('🔑 Server: JWT_REFRESH_SECRET exists:', !!process.env.JWT_REFRESH_SECRET);
       
-      const accessToken = this.generateAccessToken(user.id);
-      const refreshToken = this.generateRefreshToken(user.id);
+      const accessToken = AuthController.generateAccessToken(user.id);
+      const refreshToken = AuthController.generateRefreshToken(user.id);
       
       console.log('🎫 Server: Tokens generated successfully');
 
@@ -105,9 +105,15 @@ export class AuthController {
       });
     } catch (error) {
       console.error('💥 Server: Login error:', error);
+      console.error('💥 Server: Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       res.status(500).json({
         success: false,
         error: 'Internal server error',
+        details: error.message
       });
     }
   }
@@ -263,7 +269,7 @@ export class AuthController {
       }
 
       // Generate new access token
-      const accessToken = this.generateAccessToken(user.id);
+      const accessToken = AuthController.generateAccessToken(user.id);
 
       res.json({
         success: true,
@@ -478,7 +484,7 @@ export class AuthController {
     }
   }
 
-  private generateAccessToken(userId: string): string {
+  private static generateAccessToken(userId: string): string {
     if (!process.env.JWT_SECRET) {
       throw new Error('JWT_SECRET not configured');
     }
@@ -490,7 +496,7 @@ export class AuthController {
     );
   }
 
-  private generateRefreshToken(userId: string): string {
+  private static generateRefreshToken(userId: string): string {
     if (!process.env.JWT_REFRESH_SECRET) {
       throw new Error('JWT_REFRESH_SECRET not configured');
     }
