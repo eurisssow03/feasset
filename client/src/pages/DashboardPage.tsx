@@ -4,10 +4,8 @@ import {
   Calendar, 
   Users, 
   Building, 
-  Sparkles, 
   TrendingUp,
-  CheckIn,
-  CheckOut,
+  CheckCircle,
   Clock,
   MapPin
 } from 'lucide-react';
@@ -104,7 +102,7 @@ export default function DashboardPage() {
     {
       title: 'Checked In',
       value: kpiStats.checkedIn,
-      icon: CheckIn,
+      icon: CheckCircle,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
       description: 'Guests checking in today',
@@ -112,7 +110,7 @@ export default function DashboardPage() {
     {
       title: 'Checked Out',
       value: kpiStats.checkedOut,
-      icon: CheckOut,
+      icon: CheckCircle,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       description: 'Guests checking out today',
@@ -145,7 +143,7 @@ export default function DashboardPage() {
             {timePeriods.map((period) => (
               <Button
                 key={period.key}
-                variant={activeTab === period.key ? 'default' : 'outline'}
+                variant={activeTab === period.key ? 'primary' : 'outline'}
                 onClick={() => setActiveTab(period.key)}
                 className="text-sm"
               >
