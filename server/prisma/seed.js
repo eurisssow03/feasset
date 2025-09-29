@@ -49,14 +49,11 @@ async function main() {
   console.log('✅ Created sample units');
 
   // Create sample guest
-  const guest1 = await prisma.guest.upsert({
-    where: { email: 'john.doe@example.com' },
-    update: {},
-    create: {
+  const guest1 = await prisma.guest.create({
+    data: {
       fullName: 'John Doe',
       email: 'john.doe@example.com',
       phone: '+1234567890',
-      address: '789 Pine Street, Suburb',
       notes: 'Regular customer',
     },
   });
@@ -70,12 +67,14 @@ async function main() {
       unitId: unit1.id,
       checkIn: new Date('2024-01-15'),
       checkOut: new Date('2024-01-18'),
+      nightlyRate: 100.00,
       totalAmount: 300.00,
       cleaningFee: 25.00,
+      depositRequired: true,
       depositAmount: 100.00,
       depositRefundAmt: 0.00,
       status: 'CONFIRMED',
-      notes: 'Weekend stay',
+      specialRequests: 'Weekend stay',
     },
   });
 
