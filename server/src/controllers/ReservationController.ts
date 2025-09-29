@@ -329,8 +329,8 @@ export class ReservationController {
 
       // If dates are being updated, check for overlaps
       if (updateData.checkIn || updateData.checkOut) {
-        const checkInDate = updateData.checkIn ? new Date(updateData.checkIn) : existingReservation.checkIn;
-        const checkOutDate = updateData.checkOut ? new Date(updateData.checkOut) : existingReservation.checkOut;
+        const checkInDate = updateData.checkIn ? new Date(updateData.checkIn) : existingReservation!.checkIn;
+        const checkOutDate = updateData.checkOut ? new Date(updateData.checkOut) : existingReservation!.checkOut;
 
         if (checkInDate >= checkOutDate) {
           res.status(400).json({
@@ -342,7 +342,7 @@ export class ReservationController {
 
         const overlappingReservation = await prisma.reservation.findFirst({
           where: {
-            unitId: updateData.unitId || existingReservation.unitId,
+            unitId: updateData.unitId || existingReservation!.unitId,
             status: {
               in: ['CONFIRMED', 'CHECKED_IN'],
             },
@@ -431,7 +431,7 @@ export class ReservationController {
       }
 
       // Only allow deletion of DRAFT or CANCELED reservations
-      if (!['DRAFT', 'CANCELED'].includes(existingReservation.status)) {
+      if (!['DRAFT', 'CANCELED'].includes(existingReservation!.status)) {
         res.status(400).json({
           success: false,
           error: 'Cannot delete confirmed or active reservations',

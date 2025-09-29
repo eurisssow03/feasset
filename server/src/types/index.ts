@@ -24,8 +24,16 @@ export interface User {
   updatedAt: Date;
 }
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  isActive: boolean;
+}
+
 export interface AuthRequest extends Request {
-  user?: User;
+  user?: AuthUser;
   params: any;
   query: any;
   body: any;

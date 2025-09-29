@@ -613,7 +613,7 @@ export class FinanceController {
               total: depositSummary._sum.depositAmount || 0,
               refunded: depositSummary._sum.depositRefundAmt || 0,
               forfeited: depositSummary._sum.depositForfeitAmt || 0,
-              net: (depositSummary._sum.depositAmount || 0) - (depositSummary._sum.depositRefundAmt || 0),
+              net: Number(depositSummary._sum.depositAmount || 0) - Number(depositSummary._sum.depositRefundAmt || 0),
             },
           },
           revenueByUnit: Object.values(revenueByUnit),

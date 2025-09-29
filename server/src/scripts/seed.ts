@@ -60,7 +60,7 @@ async function main() {
         name: userData.name,
         email: userData.email,
         passwordHash,
-        role: userData.role,
+        role: userData.role as Role,
         isActive: true,
       },
     });
@@ -123,13 +123,18 @@ async function main() {
   ];
 
   for (const guestData of guests) {
-    await prisma.guest.upsert({
+    const existingGuest = await prisma.guest.findFirst({
       where: { email: guestData.email },
-      update: {},
-      create: guestData,
     });
 
-    console.log(`✅ Guest created:`, guestData.fullName);
+    if (!existingGuest) {
+      await prisma.guest.create({
+        data: guestData,
+      });
+      console.log(`✅ Guest created:`, guestData.fullName);
+    } else {
+      console.log(`⚠️ Guest already exists:`, guestData.fullName);
+    }
   }
 
   console.log('🎉 Database seeding completed!');
