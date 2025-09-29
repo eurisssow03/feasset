@@ -29,6 +29,9 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
+  // Add debugging for form state
+  console.log('📋 Form state:', { errors, isSubmitting });
+
   const onSubmit = async (data: LoginFormData) => {
     console.log('📝 Form submitted with data:', { email: data.email, password: '***' });
     try {
@@ -102,6 +105,18 @@ export default function LoginPage() {
                 loading={isSubmitting}
               >
                 Sign In
+              </Button>
+
+              {/* Debug button to test login directly */}
+              <Button
+                type="button"
+                className="w-full mt-2 bg-red-500 hover:bg-red-600"
+                onClick={() => {
+                  console.log('🧪 Debug button clicked - testing login directly');
+                  onSubmit({ email: 'admin@homestay.com', password: 'admin123' });
+                }}
+              >
+                Debug Login (Test)
               </Button>
             </form>
 
