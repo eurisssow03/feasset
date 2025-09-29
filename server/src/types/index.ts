@@ -37,4 +37,7 @@ export interface AuthRequest extends Request {
   params: any;
   query: any;
   body: any;
+  headers: any;
+  files?: Express.Multer.File[];
+  file?: Express.Multer.File;
 }
