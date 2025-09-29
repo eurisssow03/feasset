@@ -38,8 +38,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // For now, set a mock user
       setUser({
         id: '1',
-        name: 'Test Admin',
-        email: 'admin@test.com',
+        name: 'Homestay Admin',
+        email: 'admin@homestay.com',
         role: 'ADMIN',
         isActive: true,
         createdAt: new Date().toISOString(),
@@ -52,11 +52,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Login function
   const login = async (email: string, password: string) => {
     // For now, simulate login
-    if (email === 'admin@test.com' && password === 'password123') {
+    if (email === 'admin@homestay.com' && password === 'admin123') {
       const mockUser = {
         id: '1',
-        name: 'Test Admin',
-        email: 'admin@test.com',
+        name: 'Homestay Admin',
+        email: 'admin@homestay.com',
         role: 'ADMIN' as const,
         isActive: true,
         createdAt: new Date().toISOString(),
