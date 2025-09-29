@@ -177,8 +177,9 @@ app.post('/api/locations', async (req: any, res: any) => {
   try {
     const location = await dbService.createLocation(req.body);
     res.json(location);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create location' });
+  } catch (error: any) {
+    console.error('Error creating location:', error);
+    res.status(400).json({ error: error.message || 'Failed to create location' });
   }
 });
 
@@ -186,8 +187,9 @@ app.put('/api/locations/:id', async (req: any, res: any) => {
   try {
     const location = await dbService.updateLocation(req.params.id, req.body);
     res.json(location);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update location' });
+  } catch (error: any) {
+    console.error('Error updating location:', error);
+    res.status(400).json({ error: error.message || 'Failed to update location' });
   }
 });
 

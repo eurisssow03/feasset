@@ -59,9 +59,16 @@ export class DatabaseService {
 
   // Location Management
   async createLocation(locationData: any) {
-    return await this.prisma.location.create({
-      data: locationData,
-    });
+    try {
+      return await this.prisma.location.create({
+        data: locationData,
+      });
+    } catch (error: any) {
+      if (error.code === 'P2002') {
+        throw new Error('Location name already exists. Please choose a different name.');
+      }
+      throw error;
+    }
   }
 
   async getAllLocations() {
@@ -71,10 +78,17 @@ export class DatabaseService {
   }
 
   async updateLocation(id: string, locationData: any) {
-    return await this.prisma.location.update({
-      where: { id },
-      data: locationData,
-    });
+    try {
+      return await this.prisma.location.update({
+        where: { id },
+        data: locationData,
+      });
+    } catch (error: any) {
+      if (error.code === 'P2002') {
+        throw new Error('Location name already exists. Please choose a different name.');
+      }
+      throw error;
+    }
   }
 
   // Guest Management

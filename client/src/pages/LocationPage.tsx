@@ -45,7 +45,10 @@ export default function LocationPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(locationData),
       });
-      if (!response.ok) throw new Error('Failed to create location');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create location');
+      }
       return response.json();
     },
     onSuccess: () => {
