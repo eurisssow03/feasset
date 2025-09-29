@@ -8,18 +8,23 @@
     "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "removeComments": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "removeComments": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "strictFunctionTypes": false,
     "noImplicitThis": false,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "exactOptionalPropertyTypes": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "noImplicitReturns": false,
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
@@ -32,7 +37,7 @@
   },
   "include": [
     "src/**/*",
-    "src/types/global.d.ts"
+    "src/types.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -127,7 +127,7 @@ export class FinanceController {
         toDate,
         status,
         unitId
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -304,7 +304,7 @@ export class FinanceController {
 
   async approveCleaningConsolidation(req: Request, res: Response): Promise<void> {
     try {
-      const { cleaningTaskIds, notes } = req.body;
+      const { cleaningTaskIds, notes } = req.body as any;
 
       if (!Array.isArray(cleaningTaskIds) || cleaningTaskIds.length === 0) {
         res.status(400).json({
@@ -361,7 +361,7 @@ export class FinanceController {
         fromDate,
         toDate,
         status
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);

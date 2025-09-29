@@ -55,7 +55,7 @@ export class UserController {
         search = '',
         role,
         isActive
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -157,7 +157,7 @@ export class UserController {
    */
   async createUser(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { name, email, password, role } = req.body;
+      const { name, email, password, role } = req.body as any;
 
       // Check if user already exists
       const existingUser = await prisma.user.findUnique({
@@ -232,7 +232,7 @@ export class UserController {
    */
   async getUserById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const user = await prisma.user.findUnique({
         where: { id },
@@ -311,8 +311,8 @@ export class UserController {
    */
   async updateUser(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const updateData = req.body;
+      const { id } = req.params as any;
+      const updateData = req.body as any;
 
       // Check if user exists
       const existingUser = await prisma.user.findUnique({
@@ -393,7 +393,7 @@ export class UserController {
    */
   async deleteUser(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       // Check if user exists
       const existingUser = await prisma.user.findUnique({

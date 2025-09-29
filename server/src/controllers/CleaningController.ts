@@ -15,7 +15,7 @@ export class CleaningController {
         unitId,
         scheduledFrom,
         scheduledTo
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -109,7 +109,7 @@ export class CleaningController {
         page = 1,
         limit = 10,
         status
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -176,7 +176,7 @@ export class CleaningController {
 
   async getCleaningById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const cleaning = await prisma.cleaningTask.findUnique({
         where: { id },
@@ -235,8 +235,8 @@ export class CleaningController {
 
   async assignCleaning(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { assignedToUserId, scheduledDate, notes } = req.body;
+      const { id } = req.params as any;
+      const { assignedToUserId, scheduledDate, notes } = req.body as any;
 
       const cleaning = await prisma.cleaningTask.findUnique({
         where: { id },
@@ -326,7 +326,7 @@ export class CleaningController {
 
   async startCleaning(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const cleaning = await prisma.cleaningTask.findUnique({
         where: { id },
@@ -408,8 +408,8 @@ export class CleaningController {
 
   async completeCleaning(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { notes, photoUrls = [] } = req.body;
+      const { id } = req.params as any;
+      const { notes, photoUrls = [] } = req.body as any;
 
       const cleaning = await prisma.cleaningTask.findUnique({
         where: { id },
@@ -503,8 +503,8 @@ export class CleaningController {
 
   async updateCleaning(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const updateData = req.body;
+      const { id } = req.params as any;
+      const updateData = req.body as any;
 
       const cleaning = await prisma.cleaningTask.findUnique({
         where: { id },

@@ -10,7 +10,7 @@ export class GuestController {
         page = 1,
         limit = 10,
         search = ''
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -64,7 +64,7 @@ export class GuestController {
 
   async createGuest(req: Request, res: Response): Promise<void> {
     try {
-      const { fullName, phone, email, notes } = req.body;
+      const { fullName, phone, email, notes } = req.body as any;
 
       const guest = await prisma.guest.create({
         data: {
@@ -97,7 +97,7 @@ export class GuestController {
 
   async getGuestById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const guest = await prisma.guest.findUnique({
         where: { id },
@@ -145,8 +145,8 @@ export class GuestController {
 
   async updateGuest(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const updateData = req.body;
+      const { id } = req.params as any;
+      const updateData = req.body as any;
 
       // Check if guest exists
       const existingGuest = await prisma.guest.findUnique({
@@ -188,7 +188,7 @@ export class GuestController {
 
   async deleteGuest(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       // Check if guest exists
       const existingGuest = await prisma.guest.findUnique({

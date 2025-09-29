@@ -18,7 +18,7 @@ export class ReservationController {
         checkInTo,
         checkOutFrom,
         checkOutTo
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -131,7 +131,7 @@ export class ReservationController {
         depositAmount,
         headCount = 1,
         specialRequests
-      } = req.body;
+      } = req.body as any;
 
       // Validate dates
       const checkInDate = new Date(checkIn);
@@ -255,7 +255,7 @@ export class ReservationController {
 
   async getReservationById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -312,8 +312,8 @@ export class ReservationController {
 
   async updateReservation(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const updateData = req.body;
+      const { id } = req.params as any;
+      const updateData = req.body as any;
 
       // Check if reservation exists
       const existingReservation = await prisma.reservation.findUnique({
@@ -416,7 +416,7 @@ export class ReservationController {
 
   async deleteReservation(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       // Check if reservation exists
       const existingReservation = await prisma.reservation.findUnique({
@@ -458,7 +458,7 @@ export class ReservationController {
 
   async checkIn(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -533,7 +533,7 @@ export class ReservationController {
 
   async checkOut(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -605,8 +605,8 @@ export class ReservationController {
 
   async extend(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { newCheckOut, reason } = req.body;
+      const { id } = req.params as any;
+      const { newCheckOut, reason } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -719,8 +719,8 @@ export class ReservationController {
 
   async cancel(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { reason } = req.body;
+      const { id } = req.params as any;
+      const { reason } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },

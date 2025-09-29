@@ -14,7 +14,7 @@ export class DepositController {
         method,
         fromDate,
         toDate
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -198,8 +198,8 @@ export class DepositController {
 
   async requestDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { amount, reason } = req.body;
+      const { id } = req.params as any;
+      const { amount, reason } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -274,8 +274,8 @@ export class DepositController {
 
   async collectDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { method, txnId, evidenceUrls = [] } = req.body;
+      const { id } = req.params as any;
+      const { method, txnId, evidenceUrls = [] } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -362,8 +362,8 @@ export class DepositController {
 
   async refundDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { amount, reason, method, txnId, evidenceUrls = [] } = req.body;
+      const { id } = req.params as any;
+      const { amount, reason, method, txnId, evidenceUrls = [] } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -457,8 +457,8 @@ export class DepositController {
 
   async forfeitDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { amount, reason, evidenceUrls = [] } = req.body;
+      const { id } = req.params as any;
+      const { amount, reason, evidenceUrls = [] } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },
@@ -545,8 +545,8 @@ export class DepositController {
 
   async failDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { reason } = req.body;
+      const { id } = req.params as any;
+      const { reason } = req.body as any;
 
       const reservation = await prisma.reservation.findUnique({
         where: { id },

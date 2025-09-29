@@ -11,7 +11,7 @@ export class UnitController {
         limit = 10,
         search = '',
         active
-      } = req.query;
+      } = req.query as any;
 
       const skip = (parseInt(page) - 1) * parseInt(limit);
       const take = parseInt(limit);
@@ -70,7 +70,7 @@ export class UnitController {
 
   async createUnit(req: Request, res: Response): Promise<void> {
     try {
-      const { name, code, address, active = true } = req.body;
+      const { name, code, address, active = true } = req.body as any;
 
       // Check if unit code already exists
       const existingUnit = await prisma.unit.findUnique({
@@ -117,7 +117,7 @@ export class UnitController {
 
   async getUnitById(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const unit = await prisma.unit.findUnique({
         where: { id },
@@ -154,8 +154,8 @@ export class UnitController {
 
   async updateUnit(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const updateData = req.body;
+      const { id } = req.params as any;
+      const updateData = req.body as any;
 
       // Check if unit exists
       const existingUnit = await prisma.unit.findUnique({
@@ -213,7 +213,7 @@ export class UnitController {
 
   async deleteUnit(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       // Check if unit exists
       const existingUnit = await prisma.unit.findUnique({
@@ -265,8 +265,8 @@ export class UnitController {
 
   async syncCalendar(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
-      const { calendarId } = req.body;
+      const { id } = req.params as any;
+      const { calendarId } = req.body as any;
 
       // Check if unit exists
       const existingUnit = await prisma.unit.findUnique({
