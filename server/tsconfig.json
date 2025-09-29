@@ -23,8 +23,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "exactOptionalPropertyTypes": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "noImplicitReturns": false,
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
