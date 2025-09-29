@@ -76,6 +76,31 @@ app.get('/api/debug/users', async (req: any, res: any) => {
   }
 });
 
+// Manual database setup endpoint
+app.post('/api/debug/setup', async (req: any, res: any) => {
+  try {
+    console.log('🔧 Manual database setup requested...');
+    
+    // This will be handled by the build process, but we can provide instructions
+    res.json({
+      success: true,
+      message: 'Database setup should be handled during deployment. Please redeploy the application to run database migrations and seeding.',
+      instructions: [
+        '1. The database tables will be created during deployment',
+        '2. Admin user will be seeded automatically',
+        '3. Check the deployment logs for database setup progress'
+      ]
+    });
+  } catch (error) {
+    console.error('💥 Debug: Setup error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Setup failed',
+      details: error.message 
+    });
+  }
+});
+
 // Authentication routes
 app.use('/api/auth', authRoutes);
 

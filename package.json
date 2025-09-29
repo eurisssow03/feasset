@@ -8,12 +8,12 @@
     "server"
   ],
   "scripts": {
-    "postinstall": "npm run db:generate",
+    "postinstall": "npm run db:generate && npm run db:push && npm run db:seed",
     "start": "cd server && npm run start",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
-    "build": "npm run db:generate && npm run build:client && npm run build:server",
+    "build": "npm run db:generate && npm run db:push && npm run db:seed && npm run build:client && npm run build:server",
     "build:client": "cd client && npm install --production=false && npm run build",
     "build:server": "cd server && npm install --production=false && npm run build",
     "test": "npm run test:client",
