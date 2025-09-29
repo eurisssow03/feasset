@@ -212,10 +212,11 @@ export class GuestController {
 
       // Check if guest has reservations
       if (existingGuest._count.reservations > 0) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Cannot delete guest with existing reservations',
         });
+        return;
       }
 
       await prisma.guest.delete({

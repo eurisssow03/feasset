@@ -138,10 +138,11 @@ export class ReservationController {
       const checkOutDate = new Date(checkOut);
 
       if (checkInDate >= checkOutDate) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Check-out date must be after check-in date',
         });
+        return;
       }
 
       // Check for overlapping reservations
@@ -175,10 +176,11 @@ export class ReservationController {
       });
 
       if (overlappingReservation) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Unit is not available for the selected dates',
         });
+        return;
       }
 
       // Verify unit and guest exist
@@ -188,17 +190,19 @@ export class ReservationController {
       ]);
 
       if (!unit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       if (!guest) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Guest not found',
         });
+        return;
       }
 
       const reservation = await prisma.reservation.create({
@@ -317,7 +321,7 @@ export class ReservationController {
       });
 
       if (!existingReservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
@@ -329,10 +333,11 @@ export class ReservationController {
         const checkOutDate = updateData.checkOut ? new Date(updateData.checkOut) : existingReservation.checkOut;
 
         if (checkInDate >= checkOutDate) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             error: 'Check-out date must be after check-in date',
           });
+          return;
         }
 
         const overlappingReservation = await prisma.reservation.findFirst({
@@ -366,7 +371,7 @@ export class ReservationController {
         });
 
         if (overlappingReservation) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             error: 'Unit is not available for the selected dates',
           });
@@ -419,7 +424,7 @@ export class ReservationController {
       });
 
       if (!existingReservation) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Reservation not found',
         });
@@ -427,10 +432,11 @@ export class ReservationController {
 
       // Only allow deletion of DRAFT or CANCELED reservations
       if (!['DRAFT', 'CANCELED'].includes(existingReservation.status)) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Cannot delete confirmed or active reservations',
         });
+        return;
       }
 
       await prisma.reservation.delete({
@@ -467,10 +473,11 @@ export class ReservationController {
       }
 
       if (reservation.status !== 'CONFIRMED') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only confirmed reservations can be checked in',
         });
+        return;
       }
 
       // Check deposit requirement
@@ -479,10 +486,11 @@ export class ReservationController {
         const isAdmin = req.user?.role === 'ADMIN';
 
         if (!allowPendingDeposit && !isAdmin) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             error: 'Deposit must be held or paid before check-in',
           });
+          return;
         }
       }
 
@@ -540,10 +548,11 @@ export class ReservationController {
       }
 
       if (reservation.status !== 'CHECKED_IN') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only checked-in reservations can be checked out',
         });
+        return;
       }
 
       // Update reservation status
@@ -612,19 +621,21 @@ export class ReservationController {
       }
 
       if (!['CONFIRMED', 'CHECKED_IN'].includes(reservation.status)) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Only confirmed or checked-in reservations can be extended',
         });
+        return;
       }
 
       const newCheckOutDate = new Date(newCheckOut);
 
       if (newCheckOutDate <= reservation.checkOut) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'New check-out date must be after current check-out date',
         });
+        return;
       }
 
       // Check for overlapping reservations
@@ -659,10 +670,11 @@ export class ReservationController {
       });
 
       if (overlappingReservation) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Unit is not available for the extended dates',
         });
+        return;
       }
 
       const updatedReservation = await prisma.reservation.update({
@@ -723,14 +735,15 @@ export class ReservationController {
       }
 
       if (reservation.status === 'CANCELED') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Reservation is already canceled',
         });
+        return;
       }
 
       if (reservation.status === 'CHECKED_OUT') {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Cannot cancel completed reservations',
         });

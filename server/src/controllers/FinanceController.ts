@@ -323,10 +323,11 @@ export class FinanceController {
       });
 
       if (tasks.length !== cleaningTaskIds.length) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Some cleaning tasks not found or not completed',
         });
+        return;
       }
 
       // Update tasks with approval notes

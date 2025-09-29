@@ -21,7 +21,7 @@ async function main() {
       name: adminName,
       email: adminEmail,
       passwordHash: adminPasswordHash,
-      role: Role.ADMIN,
+      role: 'ADMIN',
       isActive: true,
     },
   });
@@ -34,13 +34,13 @@ async function main() {
       name: 'Finance Manager',
       email: 'finance@homestay.com',
       password: 'finance123',
-      role: Role.FINANCE,
+      role: 'FINANCE',
     },
     {
       name: 'John Cleaner',
       email: 'cleaner@homestay.com',
       password: 'cleaner123',
-      role: Role.CLEANER,
+      role: 'CLEANER',
     },
     {
       name: 'Jane Agent',

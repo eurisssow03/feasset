@@ -78,10 +78,11 @@ export class UnitController {
       });
 
       if (existingUnit) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: 'Unit code already exists',
         });
+        return;
       }
 
       const unit = await prisma.unit.create({
@@ -162,10 +163,11 @@ export class UnitController {
       });
 
       if (!existingUnit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       // Check if code is being changed and if it's already taken
@@ -175,10 +177,11 @@ export class UnitController {
         });
 
         if (codeExists) {
-          return res.status(400).json({
+          res.status(400).json({
             success: false,
             error: 'Unit code already taken',
           });
+          return;
         }
       }
 
@@ -225,10 +228,11 @@ export class UnitController {
       });
 
       if (!existingUnit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       // Check if unit has active reservations
@@ -269,10 +273,11 @@ export class UnitController {
       });
 
       if (!existingUnit) {
-        return res.status(404).json({
+        res.status(404).json({
           success: false,
           error: 'Unit not found',
         });
+        return;
       }
 
       const unit = await prisma.unit.update({
