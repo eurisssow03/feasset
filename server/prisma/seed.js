@@ -24,39 +24,59 @@ async function main() {
   console.log('✅ Created admin user:', adminUser.email);
 
   // Create sample locations
-  const location1 = await prisma.location.upsert({
-    where: { name: 'Downtown Apartment Complex' },
-    update: {},
-    create: {
-      name: 'Downtown Apartment Complex',
-      address: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      country: 'US',
-      postalCode: '10001',
-      phone: '+1 (555) 123-4567',
-      email: 'downtown@homestay.com',
-      description: 'Modern apartment complex in the heart of downtown',
-      isActive: true,
-    },
-  });
+  let location1, location2;
+  
+  try {
+    location1 = await prisma.location.create({
+      data: {
+        name: 'Downtown Apartment Complex',
+        address: '123 Main Street',
+        city: 'New York',
+        state: 'NY',
+        country: 'US',
+        postalCode: '10001',
+        phone: '+1 (555) 123-4567',
+        email: 'downtown@homestay.com',
+        description: 'Modern apartment complex in the heart of downtown',
+        isActive: true,
+      },
+    });
+  } catch (error) {
+    if (error.code === 'P2002') {
+      // Location already exists, find it
+      location1 = await prisma.location.findUnique({
+        where: { name: 'Downtown Apartment Complex' }
+      });
+    } else {
+      throw error;
+    }
+  }
 
-  const location2 = await prisma.location.upsert({
-    where: { name: 'Riverside Villa' },
-    update: {},
-    create: {
-      name: 'Riverside Villa',
-      address: '456 Oak Avenue',
-      city: 'Los Angeles',
-      state: 'CA',
-      country: 'US',
-      postalCode: '90210',
-      phone: '+1 (555) 987-6543',
-      email: 'riverside@homestay.com',
-      description: 'Luxury villa with river views',
-      isActive: true,
-    },
-  });
+  try {
+    location2 = await prisma.location.create({
+      data: {
+        name: 'Riverside Villa',
+        address: '456 Oak Avenue',
+        city: 'Los Angeles',
+        state: 'CA',
+        country: 'US',
+        postalCode: '90210',
+        phone: '+1 (555) 987-6543',
+        email: 'riverside@homestay.com',
+        description: 'Luxury villa with river views',
+        isActive: true,
+      },
+    });
+  } catch (error) {
+    if (error.code === 'P2002') {
+      // Location already exists, find it
+      location2 = await prisma.location.findUnique({
+        where: { name: 'Riverside Villa' }
+      });
+    } else {
+      throw error;
+    }
+  }
 
   console.log('✅ Created sample locations');
 
