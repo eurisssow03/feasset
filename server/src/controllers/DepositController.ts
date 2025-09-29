@@ -386,8 +386,8 @@ export class DepositController {
       }
 
       const refundAmount = parseFloat(amount);
-      const currentDepositAmount = parseFloat(reservation.depositAmount || 0);
-      const currentRefundAmount = parseFloat(reservation.depositRefundAmt || 0);
+      const currentDepositAmount = parseFloat(String(reservation.depositAmount || 0));
+      const currentRefundAmount = parseFloat(String(reservation.depositRefundAmt || 0));
 
       if (refundAmount > (currentDepositAmount - currentRefundAmount)) {
         res.status(400).json({
@@ -481,7 +481,7 @@ export class DepositController {
       }
 
       const forfeitAmount = parseFloat(amount);
-      const currentDepositAmount = parseFloat(reservation.depositAmount || 0);
+      const currentDepositAmount = parseFloat(String(reservation.depositAmount || 0));
 
       if (forfeitAmount > currentDepositAmount) {
         res.status(400).json({
