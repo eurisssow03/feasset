@@ -4,8 +4,7 @@ import {
   Users, 
   Building, 
   Sparkles, 
-  TrendingUp, 
-  AlertCircle 
+  TrendingUp
 } from 'lucide-react';
 import { api } from '../lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
