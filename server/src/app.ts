@@ -162,6 +162,26 @@ app.put('/api/units/:id', async (req: any, res: any) => {
   }
 });
 
+// Users endpoints
+app.get('/api/users', async (req: any, res: any) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isActive: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
 // Guests endpoints
 app.get('/api/guests', async (req: any, res: any) => {
   try {
