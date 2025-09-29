@@ -37,7 +37,7 @@ export interface AuthRequest {
   query: any;
   body: any;
   headers: any;
-  files?: any[];
-  file?: any;
+  files?: Express.Multer.File[];
+  file?: Express.Multer.File;
   [key: string]: any;
 }

@@ -70,7 +70,7 @@ app.use('/api/v1/uploads', uploadRoutes);
 app.use('/api/v1/health', healthRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (req: any, res: any) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
