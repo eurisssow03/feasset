@@ -158,12 +158,7 @@ export class UploadController {
 
       // Stream the file
       const fileStream = fs.createReadStream(filePath);
-      fileStream.on('data', (chunk) => res.write(chunk));
-      fileStream.on('end', () => res.end());
-      fileStream.on('error', (err) => {
-        console.error('File stream error:', err);
-        res.status(500).json({ message: 'Error streaming file' });
-      });
+      fileStream.pipe(res as any);
     } catch (error) {
       console.error('Get file error:', error);
       res.status(500).json({
