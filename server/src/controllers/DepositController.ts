@@ -196,7 +196,7 @@ export class DepositController {
     }
   }
 
-  async requestDeposit(req: AuthRequest, res: Response): Promise<void> {
+  async requestDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason } = req.body;
@@ -272,7 +272,7 @@ export class DepositController {
     }
   }
 
-  async collectDeposit(req: AuthRequest, res: Response): Promise<void> {
+  async collectDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { method, txnId, evidenceUrls = [] } = req.body;
@@ -360,7 +360,7 @@ export class DepositController {
     }
   }
 
-  async refundDeposit(req: AuthRequest, res: Response): Promise<void> {
+  async refundDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason, method, txnId, evidenceUrls = [] } = req.body;
@@ -455,7 +455,7 @@ export class DepositController {
     }
   }
 
-  async forfeitDeposit(req: AuthRequest, res: Response): Promise<void> {
+  async forfeitDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { amount, reason, evidenceUrls = [] } = req.body;
@@ -543,7 +543,7 @@ export class DepositController {
     }
   }
 
-  async failDeposit(req: AuthRequest, res: Response): Promise<void> {
+  async failDeposit(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { reason } = req.body;

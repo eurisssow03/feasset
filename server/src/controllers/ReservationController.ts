@@ -117,7 +117,7 @@ export class ReservationController {
     }
   }
 
-  async createReservation(req: AuthRequest, res: Response): Promise<void> {
+  async createReservation(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const {
         unitId,
@@ -456,7 +456,7 @@ export class ReservationController {
     }
   }
 
-  async checkIn(req: AuthRequest, res: Response): Promise<void> {
+  async checkIn(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -531,7 +531,7 @@ export class ReservationController {
     }
   }
 
-  async checkOut(req: AuthRequest, res: Response): Promise<void> {
+  async checkOut(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 

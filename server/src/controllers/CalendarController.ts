@@ -12,7 +12,7 @@ export class CalendarController {
     process.env.GOOGLE_REDIRECT_URI
   );
 
-  async connect(req: AuthRequest, res: Response): Promise<void> {
+  async connect(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const scopes = ['https://www.googleapis.com/auth/calendar'];
       
@@ -89,7 +89,7 @@ export class CalendarController {
     }
   }
 
-  async disconnect(req: AuthRequest, res: Response): Promise<void> {
+  async disconnect(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       await prisma.googleCalendar.deleteMany({});
 

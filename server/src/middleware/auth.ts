@@ -7,7 +7,7 @@ export { AuthRequest };
 
 const prisma = new PrismaClient();
 
-export const authenticate = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const authenticate = async (req: Request & AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization as string;
     
@@ -58,7 +58,7 @@ export const authenticate = async (req: AuthRequest, res: Response, next: NextFu
 };
 
 export const authorize = (...roles: Role[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+  return (req: Request & AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
@@ -79,7 +79,7 @@ export const authorize = (...roles: Role[]) => {
   };
 };
 
-export const optionalAuth = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+export const optionalAuth = async (req: Request & AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization as string;
     

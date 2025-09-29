@@ -133,7 +133,7 @@ export class AuthController {
    *       403:
    *         description: Insufficient permissions
    */
-  async register(req: AuthRequest, res: Response): Promise<void> {
+  async register(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { name, email, password, role } = req.body as {
         name: string;
@@ -274,7 +274,7 @@ export class AuthController {
    *       200:
    *         description: Logout successful
    */
-  async logout(req: AuthRequest, res: Response): Promise<void> {
+  async logout(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       // In a real application, you might want to blacklist the token
       // For now, we'll just return success
@@ -305,7 +305,7 @@ export class AuthController {
    *       401:
    *         description: Unauthorized
    */
-  async getProfile(req: AuthRequest, res: Response): Promise<void> {
+  async getProfile(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       if (!req.user) {
         res.status(401).json({

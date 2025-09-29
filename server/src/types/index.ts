@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 // Re-export Prisma types and define additional types
 export type Role = 'ADMIN' | 'FINANCE' | 'CLEANER' | 'AGENT';
 export type ReservationStatus = 'DRAFT' | 'CONFIRMED' | 'CHECKED_IN' | 'CHECKED_OUT' | 'CANCELED';
@@ -32,12 +30,14 @@ export interface AuthUser {
   isActive: boolean;
 }
 
-export interface AuthRequest extends Request {
+// Simple AuthRequest interface without extending Request to avoid circular dependencies
+export interface AuthRequest {
   user?: AuthUser;
   params: any;
   query: any;
   body: any;
   headers: any;
-  files?: Express.Multer.File[];
-  file?: Express.Multer.File;
+  files?: any[];
+  file?: any;
+  [key: string]: any;
 }

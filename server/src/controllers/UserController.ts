@@ -155,7 +155,7 @@ export class UserController {
    *       403:
    *         description: Insufficient permissions
    */
-  async createUser(req: AuthRequest, res: Response): Promise<void> {
+  async createUser(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { name, email, password, role } = req.body;
 

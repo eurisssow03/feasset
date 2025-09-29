@@ -103,7 +103,7 @@ export class CleaningController {
     }
   }
 
-  async getMyTasks(req: AuthRequest, res: Response): Promise<void> {
+  async getMyTasks(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const {
         page = 1,
@@ -324,7 +324,7 @@ export class CleaningController {
     }
   }
 
-  async startCleaning(req: AuthRequest, res: Response): Promise<void> {
+  async startCleaning(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
 
@@ -406,7 +406,7 @@ export class CleaningController {
     }
   }
 
-  async completeCleaning(req: AuthRequest, res: Response): Promise<void> {
+  async completeCleaning(req: Request & AuthRequest, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { notes, photoUrls = [] } = req.body;
