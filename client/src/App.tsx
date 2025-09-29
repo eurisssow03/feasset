@@ -18,7 +18,9 @@ import SettingsPage from './pages/SettingsPage';
 import { AppLayout } from './components/layout/AppLayout';
 
 function App() {
+  console.log('🚀 App component loaded');
   const { user, isLoading } = useAuth();
+  console.log('👤 Auth state:', { user, isLoading });
 
   if (isLoading) {
     return (

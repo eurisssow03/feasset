@@ -50,11 +50,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(false);
   }, []);
 
+  // Test function to check if auth endpoint is reachable
+  const testAuthEndpoint = async () => {
+    try {
+      console.log('🧪 Testing auth endpoint...');
+      const response = await fetch('/api/auth/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ test: 'data' }),
+      });
+      
+      const data = await response.json();
+      console.log('🧪 Test response:', data);
+      return data;
+    } catch (error) {
+      console.error('🧪 Test error:', error);
+      throw error;
+    }
+  };
+
   // Login function
   const login = async (email: string, password: string) => {
     console.log('🔐 Login attempt:', { email, password: '***' });
     
     try {
+      // First test if auth endpoint is reachable
+      await testAuthEndpoint();
+      
       console.log('📡 Making request to /api/auth/login');
       const response = await fetch('/api/auth/login', {
         method: 'POST',

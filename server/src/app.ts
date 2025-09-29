@@ -101,6 +101,17 @@ app.post('/api/debug/setup', async (req: any, res: any) => {
   }
 });
 
+// Test authentication endpoint
+app.post('/api/auth/test', (req: any, res: any) => {
+  console.log('🧪 Test auth endpoint hit');
+  console.log('📝 Request body:', req.body);
+  res.json({ 
+    success: true, 
+    message: 'Auth endpoint is working',
+    receivedData: req.body 
+  });
+});
+
 // Authentication routes
 app.use('/api/auth', authRoutes);
 

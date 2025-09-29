@@ -16,8 +16,10 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
+  console.log('🔐 LoginPage component loaded');
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
+  console.log('🔐 Login function available:', typeof login);
 
   const {
     register,
@@ -28,9 +30,13 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    console.log('📝 Form submitted with data:', { email: data.email, password: '***' });
     try {
+      console.log('🔄 Calling login function...');
       await login(data.email, data.password);
+      console.log('✅ Login function completed');
     } catch (error) {
+      console.error('❌ Login function failed:', error);
       // Error is handled in the auth context
     }
   };

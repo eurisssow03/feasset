@@ -83,8 +83,13 @@ export class AuthController {
 
       // Generate tokens
       console.log('🎫 Server: Generating tokens...');
+      console.log('🔑 Server: JWT_SECRET exists:', !!process.env.JWT_SECRET);
+      console.log('🔑 Server: JWT_REFRESH_SECRET exists:', !!process.env.JWT_REFRESH_SECRET);
+      
       const accessToken = this.generateAccessToken(user.id);
       const refreshToken = this.generateRefreshToken(user.id);
+      
+      console.log('🎫 Server: Tokens generated successfully');
 
       // Remove password from response
       const { passwordHash, ...userWithoutPassword } = user;
