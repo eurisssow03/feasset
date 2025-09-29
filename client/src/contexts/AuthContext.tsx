@@ -53,9 +53,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Login function
   const login = async (email: string, password: string) => {
     try {
-      const { user, token } = await api.login(email, password);
-      localStorage.setItem('accessToken', token);
-      localStorage.setItem('refreshToken', token); // Using same token for simplicity
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login failed');
+      }
+
+      const data = await response.json();
+      const { user, accessToken } = data.data;
+      
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', accessToken);
       setUser(user);
       toast.success('Login successful');
     } catch (error: any) {

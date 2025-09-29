@@ -6,7 +6,7 @@ import {
   Sparkles, 
   TrendingUp
 } from 'lucide-react';
-import { api } from '../lib/api';
+// Direct fetch calls instead of API layer
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/Card';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { formatCurrency } from '../lib/utils';
@@ -31,7 +31,11 @@ export default function DashboardPage() {
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ['dashboard', 'stats'],
     queryFn: async () => {
-      return await api.getDashboardData();
+      const response = await fetch('/api/dashboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch dashboard data');
+      }
+      return response.json();
     },
   });
 
