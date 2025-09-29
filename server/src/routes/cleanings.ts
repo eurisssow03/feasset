@@ -124,7 +124,7 @@ router.get('/', authenticate, validateQuery(querySchema), cleaningController.get
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/my-tasks', authenticate, authorize(Role.CLEANER), validateQuery(querySchema), cleaningController.getMyTasks);
+router.get('/my-tasks', authenticate, authorize('CLEANER'), validateQuery(querySchema), cleaningController.getMyTasks);
 
 /**
  * @swagger
@@ -188,7 +188,7 @@ router.get('/:id', authenticate, validateParams(paramsSchema), cleaningControlle
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/:id/assign', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), validate(assignCleaningSchema), cleaningController.assignCleaning);
+router.post('/:id/assign', authenticate, authorize('ADMIN'), validateParams(paramsSchema), validate(assignCleaningSchema), cleaningController.assignCleaning);
 
 /**
  * @swagger
@@ -212,7 +212,7 @@ router.post('/:id/assign', authenticate, authorize(Role.ADMIN), validateParams(p
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/:id/start', authenticate, authorize(Role.CLEANER), validateParams(paramsSchema), cleaningController.startCleaning);
+router.post('/:id/start', authenticate, authorize('CLEANER'), validateParams(paramsSchema), cleaningController.startCleaning);
 
 /**
  * @swagger
@@ -252,7 +252,7 @@ router.post('/:id/start', authenticate, authorize(Role.CLEANER), validateParams(
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/:id/complete', authenticate, authorize(Role.CLEANER), validateParams(paramsSchema), validate(completeCleaningSchema), cleaningController.completeCleaning);
+router.post('/:id/complete', authenticate, authorize('CLEANER'), validateParams(paramsSchema), validate(completeCleaningSchema), cleaningController.completeCleaning);
 
 /**
  * @swagger
@@ -292,6 +292,6 @@ router.post('/:id/complete', authenticate, authorize(Role.CLEANER), validatePara
  *       403:
  *         description: Insufficient permissions
  */
-router.put('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), validate(updateCleaningSchema), cleaningController.updateCleaning);
+router.put('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), validate(updateCleaningSchema), cleaningController.updateCleaning);
 
 export default router;

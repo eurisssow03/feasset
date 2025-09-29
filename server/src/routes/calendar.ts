@@ -27,7 +27,7 @@ const paramsSchema = Joi.object({
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/connect', authenticate, authorize(Role.ADMIN), calendarController.connect);
+router.get('/connect', authenticate, authorize('ADMIN'), calendarController.connect);
 
 /**
  * @swagger
@@ -68,7 +68,7 @@ router.get('/connect/callback', calendarController.callback);
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/disconnect', authenticate, authorize(Role.ADMIN), calendarController.disconnect);
+router.post('/disconnect', authenticate, authorize('ADMIN'), calendarController.disconnect);
 
 /**
  * @swagger
@@ -92,7 +92,7 @@ router.post('/disconnect', authenticate, authorize(Role.ADMIN), calendarControll
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/units/:id/sync', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), calendarController.syncUnit);
+router.post('/units/:id/sync', authenticate, authorize('ADMIN'), validateParams(paramsSchema), calendarController.syncUnit);
 
 /**
  * @swagger
@@ -126,7 +126,7 @@ router.post('/units/:id/sync', authenticate, authorize(Role.ADMIN), validatePara
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/units/:id/events', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), calendarController.getUnitEvents);
+router.get('/units/:id/events', authenticate, authorize('ADMIN'), validateParams(paramsSchema), calendarController.getUnitEvents);
 
 /**
  * @swagger
@@ -142,6 +142,6 @@ router.get('/units/:id/events', authenticate, authorize(Role.ADMIN), validatePar
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/status', authenticate, authorize(Role.ADMIN), calendarController.getStatus);
+router.get('/status', authenticate, authorize('ADMIN'), calendarController.getStatus);
 
 export default router;

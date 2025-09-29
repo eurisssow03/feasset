@@ -40,7 +40,7 @@ const cleaningConsolidationQuerySchema = Joi.object({
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/dashboard', authenticate, authorize(Role.FINANCE, Role.ADMIN), financeController.getDashboard);
+router.get('/dashboard', authenticate, authorize('FINANCE', 'ADMIN'), financeController.getDashboard);
 
 /**
  * @swagger
@@ -89,7 +89,7 @@ router.get('/dashboard', authenticate, authorize(Role.FINANCE, Role.ADMIN), fina
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/cleanings', authenticate, authorize(Role.FINANCE, Role.ADMIN), validateQuery(cleaningConsolidationQuerySchema), financeController.getCleaningConsolidation);
+router.get('/cleanings', authenticate, authorize('FINANCE', 'ADMIN'), validateQuery(cleaningConsolidationQuerySchema), financeController.getCleaningConsolidation);
 
 /**
  * @swagger
@@ -125,7 +125,7 @@ router.get('/cleanings', authenticate, authorize(Role.FINANCE, Role.ADMIN), vali
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/cleanings/export', authenticate, authorize(Role.FINANCE, Role.ADMIN), validateQuery(cleaningConsolidationQuerySchema), financeController.exportCleaningConsolidation);
+router.get('/cleanings/export', authenticate, authorize('FINANCE', 'ADMIN'), validateQuery(cleaningConsolidationQuerySchema), financeController.exportCleaningConsolidation);
 
 /**
  * @swagger
@@ -157,7 +157,7 @@ router.get('/cleanings/export', authenticate, authorize(Role.FINANCE, Role.ADMIN
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/cleanings/approve', authenticate, authorize(Role.FINANCE, Role.ADMIN), financeController.approveCleaningConsolidation);
+router.post('/cleanings/approve', authenticate, authorize('FINANCE', 'ADMIN'), financeController.approveCleaningConsolidation);
 
 /**
  * @swagger
@@ -202,7 +202,7 @@ router.post('/cleanings/approve', authenticate, authorize(Role.FINANCE, Role.ADM
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/deposits', authenticate, authorize(Role.FINANCE, Role.ADMIN), validateQuery(querySchema), financeController.getDepositsSummary);
+router.get('/deposits', authenticate, authorize('FINANCE', 'ADMIN'), validateQuery(querySchema), financeController.getDepositsSummary);
 
 /**
  * @swagger
@@ -234,7 +234,7 @@ router.get('/deposits', authenticate, authorize(Role.FINANCE, Role.ADMIN), valid
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/deposits/export', authenticate, authorize(Role.FINANCE, Role.ADMIN), validateQuery(querySchema), financeController.exportDepositsSummary);
+router.get('/deposits/export', authenticate, authorize('FINANCE', 'ADMIN'), validateQuery(querySchema), financeController.exportDepositsSummary);
 
 /**
  * @swagger
@@ -263,6 +263,6 @@ router.get('/deposits/export', authenticate, authorize(Role.FINANCE, Role.ADMIN)
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/reports/monthly', authenticate, authorize(Role.FINANCE, Role.ADMIN), financeController.getMonthlyReport);
+router.get('/reports/monthly', authenticate, authorize('FINANCE', 'ADMIN'), financeController.getMonthlyReport);
 
 export default router;

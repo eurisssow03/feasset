@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { CleaningStatus } from '../types';
-import { AuthRequest } from '../middleware/auth';
+import { CleaningStatus, AuthRequest } from '../types';
 
 const prisma = new PrismaClient();
 

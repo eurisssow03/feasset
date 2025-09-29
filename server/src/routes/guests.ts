@@ -187,6 +187,6 @@ router.put('/:id', authenticate, validateParams(paramsSchema), validate(updateGu
  *       403:
  *         description: Insufficient permissions
  */
-router.delete('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), guestController.deleteGuest);
+router.delete('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), guestController.deleteGuest);
 
 export default router;

@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { Role } from '../types';
-import { AuthRequest } from '../middleware/auth';
+import { Role, AuthRequest } from '../types';
 
 const prisma = new PrismaClient();
 

@@ -112,7 +112,7 @@ router.get('/', authenticate, validateQuery(querySchema), unitController.getAllU
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/', authenticate, authorize(Role.ADMIN), validate(createUnitSchema), unitController.createUnit);
+router.post('/', authenticate, authorize('ADMIN'), validate(createUnitSchema), unitController.createUnit);
 
 /**
  * @swagger
@@ -178,7 +178,7 @@ router.get('/:id', authenticate, validateParams(paramsSchema), unitController.ge
  *       403:
  *         description: Insufficient permissions
  */
-router.put('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), validate(updateUnitSchema), unitController.updateUnit);
+router.put('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), validate(updateUnitSchema), unitController.updateUnit);
 
 /**
  * @swagger
@@ -202,7 +202,7 @@ router.put('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSch
  *       403:
  *         description: Insufficient permissions
  */
-router.delete('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), unitController.deleteUnit);
+router.delete('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), unitController.deleteUnit);
 
 /**
  * @swagger
@@ -237,6 +237,6 @@ router.delete('/:id', authenticate, authorize(Role.ADMIN), validateParams(params
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/:id/sync-calendar', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), validate(syncCalendarSchema), unitController.syncCalendar);
+router.post('/:id/sync-calendar', authenticate, authorize('ADMIN'), validateParams(paramsSchema), validate(syncCalendarSchema), unitController.syncCalendar);
 
 export default router;

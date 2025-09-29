@@ -98,7 +98,7 @@ const querySchema = Joi.object({
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/ledger', authenticate, authorize(Role.FINANCE, Role.ADMIN), validate(querySchema), depositController.getDepositsLedger);
+router.get('/ledger', authenticate, authorize('FINANCE', 'ADMIN'), validate(querySchema), depositController.getDepositsLedger);
 
 /**
  * @swagger
@@ -134,7 +134,7 @@ router.get('/ledger', authenticate, authorize(Role.FINANCE, Role.ADMIN), validat
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/ledger/export', authenticate, authorize(Role.FINANCE, Role.ADMIN), validate(querySchema), depositController.exportDepositsLedger);
+router.get('/ledger/export', authenticate, authorize('FINANCE', 'ADMIN'), validate(querySchema), depositController.exportDepositsLedger);
 
 /**
  * @swagger

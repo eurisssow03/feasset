@@ -275,7 +275,7 @@ router.put('/:id', authenticate, validateParams(paramsSchema), validate(updateRe
  *       403:
  *         description: Insufficient permissions
  */
-router.delete('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), reservationController.deleteReservation);
+router.delete('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), reservationController.deleteReservation);
 
 /**
  * @swagger

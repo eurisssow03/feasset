@@ -76,7 +76,7 @@ const paramsSchema = Joi.object({
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/', authenticate, authorize(Role.ADMIN), validateQuery(querySchema), userController.getAllUsers);
+router.get('/', authenticate, authorize('ADMIN'), validateQuery(querySchema), userController.getAllUsers);
 
 /**
  * @swagger
@@ -117,7 +117,7 @@ router.get('/', authenticate, authorize(Role.ADMIN), validateQuery(querySchema),
  *       403:
  *         description: Insufficient permissions
  */
-router.post('/', authenticate, authorize(Role.ADMIN), validate(createUserSchema), userController.createUser);
+router.post('/', authenticate, authorize('ADMIN'), validate(createUserSchema), userController.createUser);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ router.post('/', authenticate, authorize(Role.ADMIN), validate(createUserSchema)
  *       403:
  *         description: Insufficient permissions
  */
-router.get('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), userController.getUserById);
+router.get('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), userController.getUserById);
 
 /**
  * @swagger
@@ -184,7 +184,7 @@ router.get('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSch
  *       403:
  *         description: Insufficient permissions
  */
-router.put('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), validate(updateUserSchema), userController.updateUser);
+router.put('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), validate(updateUserSchema), userController.updateUser);
 
 /**
  * @swagger
@@ -208,6 +208,6 @@ router.put('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSch
  *       403:
  *         description: Insufficient permissions
  */
-router.delete('/:id', authenticate, authorize(Role.ADMIN), validateParams(paramsSchema), userController.deleteUser);
+router.delete('/:id', authenticate, authorize('ADMIN'), validateParams(paramsSchema), userController.deleteUser);
 
 export default router;
