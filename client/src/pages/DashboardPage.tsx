@@ -188,7 +188,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-600">Total Revenue</span>
-                <span className="text-lg font-semibold">{formatCurrency(stats?.totalRevenue || 0)}</span>
+                <span className="text-lg font-semibold">{formatCurrency(Number(stats?.totalRevenue || 0))}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-gray-600">Total Guests</span>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900 text-sm">{formatCurrency(reservation.totalAmount)}</p>
+                      <p className="font-semibold text-gray-900 text-sm">{formatCurrency(Number(reservation.totalAmount || 0))}</p>
                       <p className="text-xs text-gray-600">{reservation.status}</p>
                     </div>
                   </div>

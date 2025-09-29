@@ -236,14 +236,14 @@ export default function ReservationsPage() {
                         <DollarSign className="h-4 w-4 mr-2" />
                         <div>
                           <p className="font-medium">Total Amount</p>
-                          <p>${reservation.totalAmount?.toFixed(2) || '0.00'}</p>
+                          <p>${Number(reservation.totalAmount || 0).toFixed(2)}</p>
                         </div>
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <Building className="h-4 w-4 mr-2" />
                         <div>
                           <p className="font-medium">Nightly Rate</p>
-                          <p>${reservation.nightlyRate?.toFixed(2) || '0.00'}/night</p>
+                          <p>${Number(reservation.nightlyRate || 0).toFixed(2)}/night</p>
                         </div>
                       </div>
                     </div>
