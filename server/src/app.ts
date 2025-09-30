@@ -10,6 +10,7 @@ import path from 'path';
 import authRoutes from './routes/auth';
 
 // __dirname is available in CommonJS modules
+declare const __dirname: string;
 
 // Load environment variables
 dotenv.config();
