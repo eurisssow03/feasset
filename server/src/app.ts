@@ -46,29 +46,12 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, '../../client/dist')));
+
 // Health check endpoint
 app.get('/health', (req: any, res: any) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
-
-// API status endpoint
-app.get('/', (req: any, res: any) => {
-  res.json({ 
-    message: 'Homestay Management API is running!',
-    version: '1.0.0',
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: '/health',
-      api: '/api',
-      locations: '/api/locations',
-      units: '/api/units',
-      reservations: '/api/reservations',
-      guests: '/api/guests',
-      users: '/api/users',
-      cleanings: '/api/cleanings'
-    }
-  });
 });
 
 // Debug endpoint to check database connection and user data
@@ -327,21 +310,9 @@ app.post('/api/calendar/sync/:id', async (req: any, res: any) => {
   }
 });
 
-// API not found handler
+// Serve the React app for all routes (SPA routing)
 app.get('*', (req: any, res: any) => {
-  res.status(404).json({ 
-    error: 'API endpoint not found',
-    message: 'Please check the available endpoints at the root URL',
-    availableEndpoints: [
-      '/health',
-      '/api/locations',
-      '/api/units', 
-      '/api/reservations',
-      '/api/guests',
-      '/api/users',
-      '/api/cleanings'
-    ]
-  });
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
 // Error handling middleware
