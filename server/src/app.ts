@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import authRoutes from './routes/auth';
 
 // __dirname is available in CommonJS modules
@@ -315,7 +316,7 @@ app.get('*', (req: any, res: any) => {
   const indexPath = path.join(__dirname, '../client/dist/index.html');
   
   // Check if the React build exists
-  if (require('fs').existsSync(indexPath)) {
+  if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
     // Fallback if React build doesn't exist
