@@ -9,8 +9,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import authRoutes from './routes/auth';
 
-// For CommonJS compatibility
-const __dirname = process.cwd();
+// __dirname is available in CommonJS modules
 
 // Load environment variables
 dotenv.config();
