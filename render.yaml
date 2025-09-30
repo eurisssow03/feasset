@@ -12,6 +12,8 @@ services:
       npm run build
       echo "📁 Checking React build output..."
       ls -la dist/
+      echo "📁 Copying React build to server directory..."
+      cp -r dist ../server/client/
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
@@ -20,6 +22,8 @@ services:
       npx prisma generate
       echo "📁 Final directory structure:"
       find . -name "index.html" -type f
+      echo "📁 Server directory contents:"
+      ls -la
       echo "✅ Full-stack build complete!"
     startCommand: |
       echo "🚀 Starting Full-Stack Web Application..."
