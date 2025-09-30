@@ -10,12 +10,16 @@ services:
       cd client && npm install
       echo "🏗️ Building React frontend..."
       npm run build
+      echo "📁 Checking React build output..."
+      ls -la dist/
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
       npm run build
       echo "🗄️ Generating Prisma client..."
       npx prisma generate
+      echo "📁 Final directory structure:"
+      find . -name "index.html" -type f
       echo "✅ Full-stack build complete!"
     startCommand: |
       echo "🚀 Starting Full-Stack Web Application..."

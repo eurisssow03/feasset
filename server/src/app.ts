@@ -53,7 +53,9 @@ const staticPaths = [
   path.join(__dirname, '../client/dist'),
   path.join(__dirname, '../../client/dist'),
   path.join(process.cwd(), 'client/dist'),
-  path.join(process.cwd(), 'dist')
+  path.join(process.cwd(), 'dist'),
+  path.join(process.cwd(), '../client/dist'),
+  path.join(process.cwd(), '../../client/dist')
 ];
 
 for (const staticPath of staticPaths) {
@@ -337,7 +339,9 @@ app.get('/', (req: any, res: any) => {
     path.join(__dirname, '../client/dist/index.html'),
     path.join(__dirname, '../../client/dist/index.html'),
     path.join(process.cwd(), 'client/dist/index.html'),
-    path.join(process.cwd(), 'dist/index.html')
+    path.join(process.cwd(), 'dist/index.html'),
+    path.join(process.cwd(), '../client/dist/index.html'),
+    path.join(process.cwd(), '../../client/dist/index.html')
   ];
   
   let indexPath = null;
@@ -383,7 +387,9 @@ app.get('*', (req: any, res: any) => {
     path.join(__dirname, '../client/dist/index.html'),
     path.join(__dirname, '../../client/dist/index.html'),
     path.join(process.cwd(), 'client/dist/index.html'),
-    path.join(process.cwd(), 'dist/index.html')
+    path.join(process.cwd(), 'dist/index.html'),
+    path.join(process.cwd(), '../client/dist/index.html'),
+    path.join(process.cwd(), '../../client/dist/index.html')
   ];
   
   let indexPath = null;
