@@ -18,6 +18,8 @@ services:
       cp -r dist/* ../server/client/
       echo "📁 Verifying copy..."
       ls -la ../server/client/
+      echo "📁 Checking for index.html in server/client..."
+      ls -la ../server/client/index.html
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
@@ -28,6 +30,8 @@ services:
       find . -name "index.html" -type f
       echo "📁 Server directory contents:"
       ls -la
+      echo "📁 Server/client directory contents:"
+      ls -la client/
       echo "✅ Full-stack build complete!"
     startCommand: |
       echo "🚀 Starting Full-Stack Web Application..."

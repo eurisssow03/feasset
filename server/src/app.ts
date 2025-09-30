@@ -58,8 +58,11 @@ const staticPaths = [
   path.join(process.cwd(), '../../client/dist')
 ];
 
+console.log('🔍 Checking for static file directories:');
 for (const staticPath of staticPaths) {
-  if (fs.existsSync(staticPath)) {
+  const exists = fs.existsSync(staticPath);
+  console.log(`  ${exists ? '✅' : '❌'} ${staticPath}`);
+  if (exists) {
     app.use(express.static(staticPath));
     console.log(`📁 Serving static files from: ${staticPath}`);
     break;
@@ -344,9 +347,12 @@ app.get('/', (req: any, res: any) => {
     path.join(process.cwd(), '../../client/dist/index.html')
   ];
   
+  console.log('🔍 Checking for React build index.html:');
   let indexPath = null;
   for (const possiblePath of possiblePaths) {
-    if (fs.existsSync(possiblePath)) {
+    const exists = fs.existsSync(possiblePath);
+    console.log(`  ${exists ? '✅' : '❌'} ${possiblePath}`);
+    if (exists) {
       indexPath = possiblePath;
       break;
     }
