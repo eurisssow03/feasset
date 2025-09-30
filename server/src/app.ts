@@ -8,7 +8,6 @@ import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
-import { exec } from 'child_process';
 import authRoutes from './routes/auth';
 
 // __dirname is available in CommonJS modules
@@ -362,6 +361,7 @@ app.get('/', (req: any, res: any) => {
     
     if (fs.existsSync(buildPath)) {
       console.log('📦 Building React app from:', buildPath);
+      const { exec } = require('child_process');
       exec('cd ../client && npm install && npm run build', (error: any, stdout: any, stderr: any) => {
         if (error) {
           console.error('❌ Build error:', error);
