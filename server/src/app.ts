@@ -47,7 +47,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files from the React app build directory
-app.use(express.static(path.join(__dirname, '../../client/dist')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Health check endpoint
 app.get('/health', (req: any, res: any) => {
@@ -312,7 +312,28 @@ app.post('/api/calendar/sync/:id', async (req: any, res: any) => {
 
 // Serve the React app for all routes (SPA routing)
 app.get('*', (req: any, res: any) => {
-  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  const indexPath = path.join(__dirname, '../client/dist/index.html');
+  
+  // Check if the React build exists
+  if (require('fs').existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    // Fallback if React build doesn't exist
+    res.json({
+      message: 'Homestay Management System',
+      status: 'Building...',
+      note: 'React frontend is being built. Please wait a moment and refresh.',
+      api: {
+        health: '/health',
+        locations: '/api/locations',
+        units: '/api/units',
+        reservations: '/api/reservations',
+        guests: '/api/guests',
+        users: '/api/users',
+        cleanings: '/api/cleanings'
+      }
+    });
+  }
 });
 
 // Error handling middleware
