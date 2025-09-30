@@ -325,7 +325,58 @@ app.post('/api/calendar/sync/:id', async (req: any, res: any) => {
   }
 });
 
-// Serve the React app for all routes (SPA routing)
+// Favicon route to prevent 404 errors
+app.get('/favicon.ico', (req: any, res: any) => {
+  res.status(204).end();
+});
+
+// Root endpoint - serve the React app
+app.get('/', (req: any, res: any) => {
+  // Try to serve the React app first
+  const possiblePaths = [
+    path.join(__dirname, '../client/dist/index.html'),
+    path.join(__dirname, '../../client/dist/index.html'),
+    path.join(process.cwd(), 'client/dist/index.html'),
+    path.join(process.cwd(), 'dist/index.html')
+  ];
+  
+  let indexPath = null;
+  for (const possiblePath of possiblePaths) {
+    if (fs.existsSync(possiblePath)) {
+      indexPath = possiblePath;
+      break;
+    }
+  }
+  
+  if (indexPath) {
+    res.sendFile(indexPath);
+  } else {
+    // Fallback status page
+    res.json({
+      message: 'Homestay Management System',
+      version: '1.0.0',
+      status: 'Building...',
+      note: 'This is a full-stack web application. The React frontend is being built.',
+      timestamp: new Date().toISOString(),
+      debug: {
+        currentDir: process.cwd(),
+        serverDir: __dirname,
+        checkedPaths: possiblePaths
+      },
+      api: {
+        health: '/health',
+        locations: '/api/locations',
+        units: '/api/units',
+        reservations: '/api/reservations',
+        guests: '/api/guests',
+        users: '/api/users',
+        cleanings: '/api/cleanings'
+      }
+    });
+  }
+});
+
+// Serve the React app for all other routes (SPA routing)
 app.get('*', (req: any, res: any) => {
   // Try multiple possible paths for the React build
   const possiblePaths = [

@@ -1,13 +1,31 @@
 services:
-  # Full Stack Application
+  # Full Stack Web Application (Frontend + Backend in one service)
   - type: web
-    name: homestay-app
+    name: feasset
     env: node
     plan: starter
     buildCommand: |
-      cd client && npm install && npm run build
-      cd ../server && npm install && npm run build && npx prisma generate
-    startCommand: "cd server && npx prisma db push --accept-data-loss && npm start"
+      echo "🚀 Building Full-Stack Web Application..."
+      echo "📦 Installing client dependencies..."
+      cd client && npm install
+      echo "🏗️ Building React frontend..."
+      npm run build
+      echo "📦 Installing server dependencies..."
+      cd ../server && npm install
+      echo "🏗️ Building Node.js backend..."
+      npm run build
+      echo "🗄️ Generating Prisma client..."
+      npx prisma generate
+      echo "✅ Full-stack build complete!"
+    startCommand: |
+      echo "🚀 Starting Full-Stack Web Application..."
+      cd server
+      echo "🗄️ Setting up database..."
+      npx prisma db push --accept-data-loss
+      echo "🌱 Seeding database..."
+      npm run db:seed
+      echo "🌐 Starting web server..."
+      npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -22,7 +40,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://homestay-app.onrender.com
+        value: https://feasset.onrender.com
 
 databases:
   - name: homestay-db
