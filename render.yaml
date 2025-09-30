@@ -22,17 +22,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://your-frontend-url.onrender.com
-
-  # Frontend Service
-  - type: web
-    name: homestay-frontend
-    env: static
-    buildCommand: cd client && npm ci && npm run build
-    staticPublishPath: ./client/dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://homestay-backend.onrender.com
+        value: https://homestay-app.onrender.com
 
 databases:
   - name: homestay-db

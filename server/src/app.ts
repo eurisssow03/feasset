@@ -48,7 +48,21 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files from the React app build directory
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// Try multiple possible paths for static files
+const staticPaths = [
+  path.join(__dirname, '../client/dist'),
+  path.join(__dirname, '../../client/dist'),
+  path.join(process.cwd(), 'client/dist'),
+  path.join(process.cwd(), 'dist')
+];
+
+for (const staticPath of staticPaths) {
+  if (fs.existsSync(staticPath)) {
+    app.use(express.static(staticPath));
+    console.log(`📁 Serving static files from: ${staticPath}`);
+    break;
+  }
+}
 
 // Health check endpoint
 app.get('/health', (req: any, res: any) => {
@@ -313,10 +327,23 @@ app.post('/api/calendar/sync/:id', async (req: any, res: any) => {
 
 // Serve the React app for all routes (SPA routing)
 app.get('*', (req: any, res: any) => {
-  const indexPath = path.join(__dirname, '../client/dist/index.html');
+  // Try multiple possible paths for the React build
+  const possiblePaths = [
+    path.join(__dirname, '../client/dist/index.html'),
+    path.join(__dirname, '../../client/dist/index.html'),
+    path.join(process.cwd(), 'client/dist/index.html'),
+    path.join(process.cwd(), 'dist/index.html')
+  ];
   
-  // Check if the React build exists
-  if (fs.existsSync(indexPath)) {
+  let indexPath = null;
+  for (const possiblePath of possiblePaths) {
+    if (fs.existsSync(possiblePath)) {
+      indexPath = possiblePath;
+      break;
+    }
+  }
+  
+  if (indexPath) {
     res.sendFile(indexPath);
   } else {
     // Fallback if React build doesn't exist
@@ -324,6 +351,11 @@ app.get('*', (req: any, res: any) => {
       message: 'Homestay Management System',
       status: 'Building...',
       note: 'React frontend is being built. Please wait a moment and refresh.',
+      debug: {
+        currentDir: process.cwd(),
+        serverDir: __dirname,
+        checkedPaths: possiblePaths
+      },
       api: {
         health: '/health',
         locations: '/api/locations',
