@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Homestay Management System Backend",
   "main": "dist/index.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc --noEmitOnError false --skipLibCheck true",
