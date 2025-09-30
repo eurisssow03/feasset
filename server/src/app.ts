@@ -8,6 +8,7 @@ import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import { exec } from 'child_process';
 import authRoutes from './routes/auth';
 
 // __dirname is available in CommonJS modules
@@ -355,6 +356,21 @@ app.get('/', (req: any, res: any) => {
   if (indexPath) {
     res.sendFile(indexPath);
   } else {
+    // Try to build React app if missing
+    console.log('🔧 React build not found, attempting to build...');
+    const buildPath = path.join(process.cwd(), '../client');
+    
+    if (fs.existsSync(buildPath)) {
+      console.log('📦 Building React app from:', buildPath);
+      exec('cd ../client && npm install && npm run build', (error: any, stdout: any, stderr: any) => {
+        if (error) {
+          console.error('❌ Build error:', error);
+        } else {
+          console.log('✅ React build completed');
+        }
+      });
+    }
+    
     // Fallback status page
     res.json({
       message: 'Homestay Management System',
@@ -365,7 +381,9 @@ app.get('/', (req: any, res: any) => {
       debug: {
         currentDir: process.cwd(),
         serverDir: __dirname,
-        checkedPaths: possiblePaths
+        checkedPaths: possiblePaths,
+        buildPath: buildPath,
+        buildPathExists: fs.existsSync(buildPath)
       },
       api: {
         health: '/health',

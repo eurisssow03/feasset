@@ -12,8 +12,12 @@ services:
       npm run build
       echo "📁 Checking React build output..."
       ls -la dist/
+      echo "📁 Creating server/client directory..."
+      mkdir -p ../server/client
       echo "📁 Copying React build to server directory..."
-      cp -r dist ../server/client/
+      cp -r dist/* ../server/client/
+      echo "📁 Verifying copy..."
+      ls -la ../server/client/
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
