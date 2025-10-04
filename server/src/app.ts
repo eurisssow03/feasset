@@ -350,6 +350,7 @@ app.get('/favicon.ico', (req: any, res: any) => {
 app.get('/', (req: any, res: any) => {
   // Try to serve the React app first
   const possiblePaths = [
+    path.join(__dirname, '../public/index.html'),
     path.join(__dirname, '../client/dist/index.html'),
     path.join(__dirname, '../../client/dist/index.html'),
     path.join(process.cwd(), 'client/dist/index.html'),
@@ -408,6 +409,7 @@ app.get('/', (req: any, res: any) => {
 app.get('*', (req: any, res: any) => {
   // Try multiple possible paths for the React build
   const possiblePaths = [
+    path.join(__dirname, '../public/index.html'),
     path.join(__dirname, '../client/dist/index.html'),
     path.join(__dirname, '../../client/dist/index.html'),
     path.join(process.cwd(), 'client/dist/index.html'),

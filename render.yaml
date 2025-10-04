@@ -12,32 +12,23 @@ services:
       ls -la
       echo "📦 Installing client dependencies..."
       cd client && npm install
-      echo "🏗️ Building React frontend..."
+      echo "🏗️ Building React frontend (outputs to ../server/public)..."
       npm run build
-      echo "📁 Checking React build output..."
-      ls -la dist/
-      echo "📁 Contents of dist directory:"
-      ls -la dist/
-      echo "📁 Checking if index.html exists in dist..."
-      if [ -f "dist/index.html" ]; then
-        echo "✅ index.html found in dist/"
-        echo "📁 Creating server directories..."
-        mkdir -p ../server/client
+      echo "📁 Checking React build output in server/public..."
+      ls -la ../server/public/
+      echo "📁 Checking if index.html exists in server/public..."
+      if [ -f "../server/public/index.html" ]; then
+        echo "✅ index.html found in server/public/"
+        echo "📁 Also copying to server/dist for compatibility..."
         mkdir -p ../server/dist
-        echo "📁 Copying React build to server/client..."
-        cp -r dist/* ../server/client/
-        echo "📁 Copying React build to server/dist..."
-        cp -r dist/* ../server/dist/
-        echo "📁 Verifying copies..."
-        echo "Server/client contents:"
-        ls -la ../server/client/
-        echo "Server/dist contents:"
+        cp -r ../server/public/* ../server/dist/
+        echo "📁 Verifying server/dist copy..."
         ls -la ../server/dist/
         echo "✅ React build copied successfully"
       else
-        echo "❌ index.html NOT found in dist/"
-        echo "📁 Dist directory contents:"
-        ls -la dist/
+        echo "❌ index.html NOT found in server/public/"
+        echo "📁 Server/public directory contents:"
+        ls -la ../server/public/
         echo "❌ React build failed!"
         exit 1
       fi
