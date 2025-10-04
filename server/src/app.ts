@@ -59,13 +59,24 @@ const staticPaths = [
 ];
 
 console.log('🔍 Checking for static file directories:');
+let staticServed = false;
 for (const staticPath of staticPaths) {
   const exists = fs.existsSync(staticPath);
   console.log(`  ${exists ? '✅' : '❌'} ${staticPath}`);
   if (exists) {
     app.use(express.static(staticPath));
     console.log(`📁 Serving static files from: ${staticPath}`);
+    staticServed = true;
     break;
+  }
+}
+
+// Fallback: serve from public directory if no React build found
+if (!staticServed) {
+  const publicPath = path.join(__dirname, '../public');
+  if (fs.existsSync(publicPath)) {
+    app.use(express.static(publicPath));
+    console.log(`📁 Serving fallback static files from: ${publicPath}`);
   }
 }
 
@@ -362,28 +373,34 @@ app.get('/', (req: any, res: any) => {
   if (indexPath) {
     res.sendFile(indexPath);
   } else {
-    // Fallback status page
-    res.json({
-      message: 'Homestay Management System',
-      version: '1.0.0',
-      status: 'Building...',
-      note: 'This is a full-stack web application. The React frontend is being built.',
-      timestamp: new Date().toISOString(),
-      debug: {
-        currentDir: process.cwd(),
-        serverDir: __dirname,
-        checkedPaths: possiblePaths
-      },
-      api: {
-        health: '/health',
-        locations: '/api/locations',
-        units: '/api/units',
-        reservations: '/api/reservations',
-        guests: '/api/guests',
-        users: '/api/users',
-        cleanings: '/api/cleanings'
-      }
-    });
+    // Try to serve fallback HTML file
+    const fallbackPath = path.join(__dirname, '../public/index.html');
+    if (fs.existsSync(fallbackPath)) {
+      res.sendFile(fallbackPath);
+    } else {
+      // Fallback JSON status page
+      res.json({
+        message: 'Homestay Management System',
+        version: '1.0.0',
+        status: 'Building...',
+        note: 'This is a full-stack web application. The React frontend is being built.',
+        timestamp: new Date().toISOString(),
+        debug: {
+          currentDir: process.cwd(),
+          serverDir: __dirname,
+          checkedPaths: possiblePaths
+        },
+        api: {
+          health: '/health',
+          locations: '/api/locations',
+          units: '/api/units',
+          reservations: '/api/reservations',
+          guests: '/api/guests',
+          users: '/api/users',
+          cleanings: '/api/cleanings'
+        }
+      });
+    }
   }
 });
 
