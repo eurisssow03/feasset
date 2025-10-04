@@ -18,18 +18,29 @@ services:
       ls -la dist/
       echo "📁 Contents of dist directory:"
       ls -la dist/
-      echo "📁 Creating server/client directory..."
-      mkdir -p ../server/client
-      echo "📁 Copying React build to server directory..."
-      cp -r dist/* ../server/client/
-      echo "📁 Verifying copy..."
-      ls -la ../server/client/
-      echo "📁 Checking for index.html in server/client..."
-      ls -la ../server/client/index.html
-      echo "📁 Also copying to server/dist for fallback..."
-      cp -r dist/* ../server/dist/
-      echo "📁 Verifying server/dist copy..."
-      ls -la ../server/dist/
+      echo "📁 Checking if index.html exists in dist..."
+      if [ -f "dist/index.html" ]; then
+        echo "✅ index.html found in dist/"
+        echo "📁 Creating server directories..."
+        mkdir -p ../server/client
+        mkdir -p ../server/dist
+        echo "📁 Copying React build to server/client..."
+        cp -r dist/* ../server/client/
+        echo "📁 Copying React build to server/dist..."
+        cp -r dist/* ../server/dist/
+        echo "📁 Verifying copies..."
+        echo "Server/client contents:"
+        ls -la ../server/client/
+        echo "Server/dist contents:"
+        ls -la ../server/dist/
+        echo "✅ React build copied successfully"
+      else
+        echo "❌ index.html NOT found in dist/"
+        echo "📁 Dist directory contents:"
+        ls -la dist/
+        echo "❌ React build failed!"
+        exit 1
+      fi
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
@@ -38,12 +49,6 @@ services:
       npx prisma generate
       echo "📁 Final directory structure:"
       find . -name "index.html" -type f
-      echo "📁 Server directory contents:"
-      ls -la
-      echo "📁 Server/client directory contents:"
-      ls -la client/
-      echo "📁 Server/dist directory contents:"
-      ls -la dist/
       echo "✅ Full-stack build complete!"
     startCommand: |
       echo "🚀 Starting Full-Stack Web Application..."
