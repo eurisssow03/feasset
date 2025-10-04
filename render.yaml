@@ -6,11 +6,17 @@ services:
     plan: starter
     buildCommand: |
       echo "🚀 Building Full-Stack Web Application..."
+      echo "📁 Current directory:"
+      pwd
+      echo "📁 Directory contents:"
+      ls -la
       echo "📦 Installing client dependencies..."
       cd client && npm install
       echo "🏗️ Building React frontend..."
       npm run build
       echo "📁 Checking React build output..."
+      ls -la dist/
+      echo "📁 Contents of dist directory:"
       ls -la dist/
       echo "📁 Creating server/client directory..."
       mkdir -p ../server/client
@@ -20,6 +26,10 @@ services:
       ls -la ../server/client/
       echo "📁 Checking for index.html in server/client..."
       ls -la ../server/client/index.html
+      echo "📁 Also copying to server/dist for fallback..."
+      cp -r dist/* ../server/dist/
+      echo "📁 Verifying server/dist copy..."
+      ls -la ../server/dist/
       echo "📦 Installing server dependencies..."
       cd ../server && npm install
       echo "🏗️ Building Node.js backend..."
@@ -32,6 +42,8 @@ services:
       ls -la
       echo "📁 Server/client directory contents:"
       ls -la client/
+      echo "📁 Server/dist directory contents:"
+      ls -la dist/
       echo "✅ Full-stack build complete!"
     startCommand: |
       echo "🚀 Starting Full-Stack Web Application..."

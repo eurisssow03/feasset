@@ -344,7 +344,8 @@ app.get('/', (req: any, res: any) => {
     path.join(process.cwd(), 'client/dist/index.html'),
     path.join(process.cwd(), 'dist/index.html'),
     path.join(process.cwd(), '../client/dist/index.html'),
-    path.join(process.cwd(), '../../client/dist/index.html')
+    path.join(process.cwd(), '../../client/dist/index.html'),
+    path.join(__dirname, 'dist/index.html')
   ];
   
   console.log('🔍 Checking for React build index.html:');
@@ -395,7 +396,8 @@ app.get('*', (req: any, res: any) => {
     path.join(process.cwd(), 'client/dist/index.html'),
     path.join(process.cwd(), 'dist/index.html'),
     path.join(process.cwd(), '../client/dist/index.html'),
-    path.join(process.cwd(), '../../client/dist/index.html')
+    path.join(process.cwd(), '../../client/dist/index.html'),
+    path.join(__dirname, 'dist/index.html')
   ];
   
   let indexPath = null;
